@@ -9,96 +9,98 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg-1:#0b0c10;          /* fond sombre profond */
-      --bg-2:#12141b;          /* carte */
-      --text:#eaf0f6;          
-      --muted:#aab3c0;        
-      --brand-1:#2aa5ff;      /* bleu Pamko */
-      --brand-2:#67e8f9;      /* cyan accent */
-      --ok:#79ff86;
-      --warn:#ffd166;
-      --err:#ff6188;
-      --radius:18px;
-      --shadow:0 10px 25px rgba(0,0,0,.35);
+      --bg-1:#0b0c10; --bg-2:#12141b; --text:#eaf0f6; --muted:#aab3c0;
+      --brand-1:#2aa5ff; --brand-2:#67e8f9;
+      --ok:#2ecc71; --ok2:#1fa960; --err:#ff4d4f;
+      --radius:18px; --shadow:0 10px 25px rgba(0,0,0,.35)
     }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0; font-family:Poppins, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      margin:0; font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,"Noto Sans";
       color:var(--text);
-      background: radial-gradient(1200px 700px at 20% 0%, rgba(103,232,249,0.12), transparent 55%),
-                  radial-gradient(900px 600px at 80% 10%, rgba(42,165,255,0.10), transparent 60%),
-                  linear-gradient(180deg, #0a0c11, #0b0c10 60%);
+      background:
+        radial-gradient(1200px 700px at 20% 0%, rgba(103,232,249,.12), transparent 55%),
+        radial-gradient(900px 600px at 80% 10%, rgba(42,165,255,.10), transparent 60%),
+        linear-gradient(180deg,#0a0c11,#0b0c10 60%);
       display:grid; place-items:center; padding:24px;
     }
-
-    .app{width:min(1100px, 100%); display:grid; gap:22px}
-
-    header{
-      display:flex; align-items:center; justify-content:space-between; gap:16px;
-    }
-    .title{
-      display:flex; align-items:center; gap:14px;
-    }
-    .logo{width:44px; height:44px; background:linear-gradient(135deg,var(--brand-1),var(--brand-2)); border-radius:12px; display:grid; place-items:center; font-weight:700; color:#001219; box-shadow: var(--shadow)}
-    h1{font-size:clamp(20px, 3.4vw, 32px); margin:0; letter-spacing:.2px}
-    .subtitle{margin:2px 0 0; color:var(--muted); font-size:14px}
-
-    .card{background:var(--bg-2); border:1px solid rgba(255,255,255,.06); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px}
+    .app{width:min(1100px,100%); display:grid; gap:22px}
+    header{display:flex; align-items:center; justify-content:space-between; gap:16px}
+    .title{display:flex; align-items:center; gap:14px}
+    .logo{width:44px;height:44px;background:linear-gradient(135deg,var(--brand-1),var(--brand-2));border-radius:12px;display:grid;place-items:center;font-weight:700;color:#001219;box-shadow:var(--shadow)}
+    h1{font-size:clamp(20px,3.4vw,32px);margin:0;letter-spacing:.2px}
+    .subtitle{margin:2px 0 0;color:var(--muted);font-size:14px}
+    .card{background:var(--bg-2);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
 
     /* Progress */
-    .progress{position:relative; height:8px; background:rgba(255,255,255,.08); border-radius:999px; overflow:hidden}
-    .progress__bar{position:absolute; inset:0 100% 0 0; background:linear-gradient(90deg, var(--brand-1), var(--brand-2)); transition:inset .35s ease;}
-    .progress__meta{display:flex; justify-content:space-between; font-size:12px; color:var(--muted); margin-top:10px}
+    .progress{position:relative;height:8px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden}
+    .progress__bar{position:absolute;inset:0 100% 0 0;background:linear-gradient(90deg,var(--brand-1),var(--brand-2));transition:inset .35s ease}
+    .progress__meta{display:flex;align-items:center;gap:10px;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:10px}
 
     /* Grid */
-    .content{display:grid; grid-template-columns: 360px 1fr; gap:20px}
-    @media (max-width: 900px){ .content{grid-template-columns:1fr;}}
+    .content{display:grid;grid-template-columns:360px 1fr;gap:20px}
+    @media (max-width:900px){.content{grid-template-columns:1fr}}
+    .aside{display:grid;gap:14px;align-content:start}
+    .aside .hero{background:linear-gradient(135deg,rgba(42,165,255,.18),rgba(103,232,249,.14));border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:16px;text-align:center}
+    .hero img{width:min(260px,100%);filter:drop-shadow(0 8px 24px rgba(0,0,0,.35))}
+    .panel{display:grid;gap:18px;min-height:260px}
+    .step h2{margin:0 0 8px;font-size:clamp(18px,2.6vw,24px)}
+    .hint{color:var(--muted);font-size:13px;margin-top:-4px}
 
-    .aside{
-      display:grid; gap:14px; align-content:start;
-    }
-    .aside .hero{
-      background:linear-gradient(135deg, rgba(42,165,255,.18), rgba(103,232,249,.14));
-      border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); padding:16px; text-align:center
-    }
-    .hero img{width:min(260px, 100%); filter: drop-shadow(0 8px 24px rgba(0,0,0,.35));}
-
-    .panel{display:grid; gap:18px}
-    .step h2{margin:0 0 8px; font-size:clamp(18px, 2.6vw, 24px)}
-    .hint{color:var(--muted); font-size:13px; margin-top:-4px}
-
-    /* Form controls */
-    label{font-weight:600; font-size:14px}
-    .field{display:grid; gap:8px}
-    .control{appearance:none; width:100%; padding:12px 14px; border-radius:12px; color:var(--text); background:#0f1320; border:1px solid rgba(255,255,255,.1)}
-    .control:focus{outline:none; border-color:var(--brand-2); box-shadow:0 0 0 4px rgba(103,232,249,.15)}
-    .row{display:grid; grid-template-columns:repeat(2,1fr); gap:14px}
-    @media (max-width: 720px){ .row{grid-template-columns:1fr} }
-
+    /* Forms */
+    label{font-weight:600;font-size:14px}
+    .field{display:grid;gap:8px}
+    .control{appearance:none;width:100%;padding:12px 14px;border-radius:12px;color:var(--text);background:#0f1320;border:1px solid rgba(255,255,255,.1)}
+    .control:focus{outline:none;border-color:var(--brand-2);box-shadow:0 0 0 4px rgba(103,232,249,.15)}
+    .row{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    @media (max-width:720px){.row{grid-template-columns:1fr}}
     .muted{color:var(--muted)}
 
-    /* Footer actions */
-    .actions{display:flex; gap:12px; justify-content:flex-end}
-    .btn{border:0; padding:12px 16px; border-radius:12px; font-weight:600; cursor:pointer}
-    .btn.primary{background:linear-gradient(135deg, var(--brand-1), var(--brand-2)); color:#001219}
-    .btn.ghost{background:transparent; border:1px solid rgba(255,255,255,.12); color:var(--text)}
-    .btn[disabled]{opacity:.5; cursor:not-allowed}
+    /* Buttons */
+    .actions{display:flex;gap:12px;justify-content:flex-end}
+    .btn{border:0;padding:12px 16px;border-radius:12px;font-weight:600;cursor:pointer}
+    .btn.primary{background:linear-gradient(135deg,var(--brand-1),var(--brand-2));color:#001219}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.12);color:var(--text)}
+    .btn[disabled]{opacity:.5;cursor:not-allowed}
 
     /* Offer */
-    .offer{
-      border:1px dashed rgba(103,232,249,.45);
-      background:linear-gradient(180deg, rgba(103,232,249,.07), rgba(103,232,249,0));
-      border-radius:16px; padding:16px; display:grid; gap:10px
+    .offer{border:1px dashed rgba(103,232,249,.45);background:linear-gradient(180deg,rgba(103,232,249,.07),rgba(103,232,249,0));border-radius:16px;padding:16px;display:grid;gap:10px}
+    .badge{display:inline-flex;align-items:center;gap:8px;font-size:12px;padding:6px 10px;border-radius:999px;background:rgba(121,255,134,.12);border:1px solid rgba(121,255,134,.35);color:#a6ffb0}
+    .chips{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{padding:8px 10px;border:1px solid rgba(255,255,255,.14);border-radius:999px;font-size:12px;color:var(--muted)}
+
+    /* Tooltip */
+    .tooltip{position:relative;cursor:help}
+    .tooltip:hover::after{content:attr(data-tip);position:absolute;left:0;bottom:120%;background:#0f1320;color:#fff;padding:6px 8px;border-radius:8px;white-space:nowrap;border:1px solid rgba(255,255,255,.12);font-size:12px}
+
+    /* Alert */
+    .alert{border:1px solid rgba(255,255,255,.2);background:#131722;padding:12px 14px;border-radius:12px}
+
+    /* Switch button (LED) */
+    .switch-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 14px;border:1px solid rgba(255,255,255,.1);border-radius:14px;background:#0f1320}
+    .switch-row .label{font-weight:600}
+    .btnswitch{
+      display:inline-flex;align-items:center;gap:10px;min-width:120px;justify-content:center;
+      padding:10px 16px;border-radius:999px;cursor:pointer;user-select:none;
+      background:linear-gradient(180deg,#1a2030,#121826);color:#cfd7e3;border:1px solid rgba(255,255,255,.12);
+      box-shadow:inset 0 2px 0 rgba(255,255,255,.06), inset 0 -2px 6px rgba(0,0,0,.35), 0 6px 16px rgba(0,0,0,.35);
+      transition:background .25s ease, box-shadow .25s ease, transform .02s ease;
     }
-    .badge{display:inline-flex; align-items:center; gap:8px; font-size:12px; padding:6px 10px; border-radius:999px; background:rgba(121,255,134,.12); border:1px solid rgba(121,255,134,.35); color:#a6ffb0}
+    .btnswitch:active{transform:translateY(1px)}
+    .btnswitch .dot{width:10px;height:10px;border-radius:50%;background:var(--err);box-shadow:0 0 10px rgba(255,77,79,.6)}
+    .btnswitch .txt{font-weight:700;letter-spacing:.4px}
+    .btnswitch.on{background:linear-gradient(180deg,var(--ok),var(--ok2));color:#06140c;border-color:rgba(255,255,255,.18);box-shadow:inset 0 2px 0 rgba(255,255,255,.25), inset 0 -3px 10px rgba(0,0,0,.35), 0 10px 24px rgba(0,0,0,.45)}
+    .btnswitch.on .dot{background:#d6ffe7;box-shadow:0 0 10px rgba(46,204,113,.9)}
 
-    .chips{display:flex; flex-wrap:wrap; gap:8px}
-    .chip{padding:8px 10px; border:1px solid rgba(255,255,255,.14); border-radius:999px; font-size:12px; color:var(--muted)}
-
-    /* Tiny tooltip */
-    .tooltip{position:relative; cursor:help}
-    .tooltip:hover::after{content:attr(data-tip); position:absolute; left:0; bottom:120%; background:#0f1320; color:var(--text); padding:6px 8px; border-radius:8px; white-space:nowrap; border:1px solid rgba(255,255,255,.12); font-size:12px}
+    /* Back icon button */
+    .iconbtn{
+      display:inline-flex;align-items:center;justify-content:center;
+      width:32px;height:32px;border-radius:10px;border:1px solid rgba(255,255,255,.12);
+      background:#0f1320;color:#eaf0f6;cursor:pointer;transition:filter .2s ease;
+    }
+    .iconbtn:hover{filter:brightness(1.2)}
+    .iconbtn[disabled]{opacity:.45;cursor:not-allowed}
   </style>
 </head>
 <body>
@@ -119,17 +121,18 @@
     </header>
 
     <section class="card">
-      <div class="progress" aria-label="Progression">
-        <div class="progress__bar" id="progressBar"></div>
+      <div class="progress" aria-label="Progression"><div class="progress__bar" id="progressBar"></div></div>
+      <div class="progress__meta">
+        <button id="topBack" class="iconbtn" aria-label="Retour" title="Retour">←</button>
+        <span id="stepMeta">Étape 1/5</span>
+        <span id="stepTitle">Votre appareil</span>
       </div>
-      <div class="progress__meta"><span id="stepMeta">Étape 1/5</span><span id="stepTitle">Votre appareil</span></div>
     </section>
 
     <section class="card content">
       <aside class="aside">
-        <div class="hero">
-          <img src="https://zupimages.net/up/25/08/h4r9.png" alt="Mascotte reprise smartphone"/>
-        </div>
+        <div class="hero"><img src="https://zupimages.net/up/25/08/h4r9.png" alt="Mascotte reprise smartphone"/></div>
+        <div id="recycleNote" class="alert" style="display:none">♻️ Cet appareil sera traité en <strong>recyclage uniquement</strong>.</div>
         <div class="offer" id="quickOffer" hidden>
           <span class="badge">💡 Estimation rapide</span>
           <div id="quickOfferBody" class="muted">Complétez les étapes pour voir l'offre.</div>
@@ -141,220 +144,90 @@
   </div>
 
 <script>
-  // ---------- Minimal data (example; replace with real catalog later) ----------
+  /* =====================
+     Données (catalogue)
+     ===================== */
   const MODELS = {
     Apple: {
-      "iPhone 16 Pro Max": ["128 Go", "256 Go", "512 Go", "1 To"],
-      "iPhone 16 Pro": ["128 Go", "256 Go", "512 Go", "1 To"],
-      "iPhone 16 Plus": ["128 Go", "256 Go", "512 Go"],
-      "iPhone 16": ["128 Go", "256 Go", "512 Go"],
-
-      "iPhone 15 Pro Max": ["256 Go", "512 Go", "1 To"],
-      "iPhone 15 Pro": ["128 Go", "256 Go", "512 Go", "1 To"],
-      "iPhone 15 Plus": ["128 Go", "256 Go", "512 Go"],
-      "iPhone 15": ["128 Go", "256 Go", "512 Go"],
-
-      "iPhone 14 Pro Max": ["128 Go", "256 Go", "512 Go", "1 To"],
-      "iPhone 14 Pro": ["128 Go", "256 Go", "512 Go", "1 To"],
-      "iPhone 14 Plus": ["128 Go", "256 Go", "512 Go"],
-      "iPhone 14": ["128 Go", "256 Go", "512 Go"],
-
-      "iPhone 13 Pro Max": ["128 Go", "256 Go", "512 Go", "1 To"],
-      "iPhone 13 Pro": ["128 Go", "256 Go", "512 Go", "1 To"],
-      "iPhone 13": ["128 Go", "256 Go", "512 Go"],
-      "iPhone 13 mini": ["128 Go", "256 Go", "512 Go"],
-
-      "iPhone 12 Pro Max": ["128 Go", "256 Go", "512 Go"],
-      "iPhone 12 Pro": ["128 Go", "256 Go", "512 Go"],
-      "iPhone 12": ["64 Go", "128 Go", "256 Go"],
-      "iPhone 12 mini": ["64 Go", "128 Go", "256 Go"],
-
-      "iPhone 11 Pro Max": ["64 Go", "256 Go", "512 Go"],
-      "iPhone 11 Pro": ["64 Go", "256 Go", "512 Go"],
-      "iPhone 11": ["64 Go", "128 Go", "256 Go"],
-
-      "iPhone XS Max": ["64 Go", "256 Go", "512 Go"],
-      "iPhone XS": ["64 Go", "256 Go", "512 Go"],
-      "iPhone XR": ["64 Go", "128 Go", "256 Go"],
-      "iPhone X": ["64 Go", "256 Go"],
-
-      "iPhone 8 Plus": ["64 Go", "128 Go", "256 Go"],
-      "iPhone 8": ["64 Go", "128 Go", "256 Go"],
-      "iPhone 7 Plus": ["32 Go", "128 Go", "256 Go"],
-      "iPhone 7": ["32 Go", "128 Go", "256 Go"],
-
-      "iPhone 6s Plus": ["16 Go", "32 Go", "64 Go", "128 Go"],
-      "iPhone 6s": ["16 Go", "32 Go", "64 Go", "128 Go"],
-      "iPhone 6 Plus": ["16 Go", "32 Go", "64 Go", "128 Go"],
-      "iPhone 6": ["16 Go", "32 Go", "64 Go", "128 Go"],
-
-      "iPhone SE (2022)": ["64 Go", "128 Go", "256 Go"],
-      "iPhone SE (2020)": ["64 Go", "128 Go", "256 Go"],
-      "iPhone SE (2016)": ["16 Go", "32 Go", "64 Go", "128 Go"]
+      // iPhone X et + uniquement (éligibles Face ID)
+      "iPhone 16 Pro Max":["128 Go","256 Go","512 Go","1 To"],
+      "iPhone 16 Pro":["128 Go","256 Go","512 Go","1 To"],
+      "iPhone 16 Plus":["128 Go","256 Go","512 Go"],
+      "iPhone 16":["128 Go","256 Go","512 Go"],
+      "iPhone 15 Pro Max":["256 Go","512 Go","1 To"],
+      "iPhone 15 Pro":["128 Go","256 Go","512 Go","1 To"],
+      "iPhone 15 Plus":["128 Go","256 Go","512 Go"],
+      "iPhone 15":["128 Go","256 Go","512 Go"],
+      "iPhone 14 Pro Max":["128 Go","256 Go","512 Go","1 To"],
+      "iPhone 14 Pro":["128 Go","256 Go","512 Go","1 To"],
+      "iPhone 14 Plus":["128 Go","256 Go","512 Go"],
+      "iPhone 14":["128 Go","256 Go","512 Go"],
+      "iPhone 13 Pro Max":["128 Go","256 Go","512 Go","1 To"],
+      "iPhone 13 Pro":["128 Go","256 Go","512 Go","1 To"],
+      "iPhone 13":["128 Go","256 Go","512 Go"],
+      "iPhone 13 mini":["128 Go","256 Go","512 Go"],
+      "iPhone 12 Pro Max":["128 Go","256 Go","512 Go"],
+      "iPhone 12 Pro":["128 Go","256 Go","512 Go"],
+      "iPhone 12":["64 Go","128 Go","256 Go"],
+      "iPhone 12 mini":["64 Go","128 Go","256 Go"],
+      "iPhone 11 Pro Max":["64 Go","256 Go","512 Go"],
+      "iPhone 11 Pro":["64 Go","256 Go","512 Go"],
+      "iPhone 11":["64 Go","128 Go","256 Go"],
+      "iPhone XS Max":["64 Go","256 Go","512 Go"],
+      "iPhone XS":["64 Go","256 Go","512 Go"],
+      "iPhone XR":["64 Go","128 Go","256 Go"],
+      "iPhone X":["64 Go","256 Go"]
     },
-    Samsung: {
-      "Galaxy S22": ["128 Go", "256 Go"],
-      "Galaxy A54": ["128 Go"]
-    },
-    Xiaomi: {
-      "Redmi Note 12": ["64 Go", "128 Go"],
-      "Mi 11": ["128 Go"]
-    }
+    // Les non-iPhone restent sélectionnables, mais mènent à ♻️ Recyclage
+    Samsung: {"Galaxy S22":["128 Go","256 Go"], "Galaxy A54":["128 Go"]},
+    Xiaomi:  {"Redmi Note 12":["64 Go","128 Go"], "Mi 11":["128 Go"]}
   };
 
-  const STEPS = [
-    {
-      key: 'device',
-      title: 'Votre appareil',
-      render(target, state){
-        target.innerHTML = `
-          <div class="step">
-            <h2>Quelle est la marque de votre smartphone ?</h2>
-            <p class="hint">Sélectionnez votre marque, puis votre modèle et la capacité.</p>
-            <div class="field">
-              <label for="brand">Marque</label>
-              <select id="brand" class="control" required>
-                <option value="" hidden>Choisir…</option>
-                ${Object.keys(MODELS).map(m=>`<option ${state.brand===m?'selected':''}>${m}</option>`).join('')}
-              </select>
-            </div>
-            <div class="row">
-              <div class="field">
-                <label for="model">Modèle</label>
-                <select id="model" class="control" ${state.brand?"":"disabled"}>
-                  ${buildModelOptions(state)}
-                </select>
-              </div>
-              <div class="field">
-                <label for="capacity">Capacité</label>
-                <select id="capacity" class="control" ${state.model?"":"disabled"}>
-                  ${buildCapacityOptions(state)}
-                </select>
-              </div>
-            </div>
-          </div>
-          ${nav()}
-        `;
-        target.querySelector('#brand').addEventListener('change', e=>{
-          state.brand = e.target.value || undefined; state.model=undefined; state.capacity=undefined; render();
-        });
-        const modelSel = target.querySelector('#model');
-        if(modelSel) modelSel.addEventListener('change', e=>{ state.model = e.target.value || undefined; state.capacity=undefined; render(); });
-        const capSel = target.querySelector('#capacity');
-        if(capSel) capSel.addEventListener('change', e=>{ state.capacity = e.target.value || undefined; updateQuickOffer(state); });
-      },
-      valid: s => !!(s.brand && s.model && s.capacity)
-    },
-    {
-      key: 'screen',
-      title: "État de l'écran",
-      render(target, state){
-        target.innerHTML = `
-          <div class="step">
-            <h2>Quel est l'état de l'écran ?</h2>
-            <div class="row">
-              ${radioGroup('screen', [
-                ['Parfait', 'Aucun défaut'],
-                ['Micro-rayures', 'Légères traces d’usage'],
-                ['Fissuré', 'Nécessite un remplacement', 'warn'],
-              ], state)}
-            </div>
-          </div>
-          ${nav()}
-        `;
-        listenRadios('screen', state);
-      },
-      valid: s => !!s.screen
-    },
-    {
-      key: 'body',
-      title: 'Coque & contour',
-      render(target, state){
-        target.innerHTML = `
-          <div class="step">
-            <h2>Quel est l'état de la coque et du contour ?</h2>
-            <div class="row">
-              ${radioGroup('body', [
-                ['Comme neuf', 'Aucune marque'],
-                ['Bon état', 'Micro-chocs / rayures légères'],
-                ['Marqué', 'Rayures, enfoncements visibles', 'warn']
-              ], state)}
-            </div>
-          </div>
-          ${nav()}
-        `;
-        listenRadios('body', state);
-      },
-      valid: s => !!s.body
-    },
-    {
-      key: 'battery',
-      title: 'Capacité de batterie',
-      render(target, state){
-        target.innerHTML = `
-          <div class="step">
-            <h2>Capacité maximale de la batterie</h2>
-            <p class="hint">Pour iPhone, ouvrez <span class="tooltip" data-tip="Réglages › Batterie › État de la batterie">Réglages ▸ Batterie</span>.</p>
-            <div class="row">
-              <div class="field">
-                <label for="battery">Capacité (%)</label>
-                <input id="battery" class="control" type="number" min="50" max="100" step="1" placeholder="Ex. 88" value="${state.battery??''}">
-              </div>
-              <div class="field">
-                <label for="cycles">Cycles de charge (optionnel)</label>
-                <input id="cycles" class="control" type="number" min="0" step="1" placeholder="Ex. 320" value="${state.cycles??''}">
-              </div>
-            </div>
-          </div>
-          ${nav()}
-        `;
-        target.querySelector('#battery').addEventListener('input', e=>{ state.battery = +e.target.value||undefined; updateQuickOffer(state); });
-        target.querySelector('#cycles').addEventListener('input', e=>{ state.cycles = +e.target.value||undefined; });
-      },
-      valid: s => typeof s.battery === 'number' && s.battery >= 50 && s.battery <= 100
-    },
-    {
-      key: 'functional',
-      title: 'Fonctionnalités',
-      render(target, state){
-        target.innerHTML = `
-          <div class="step">
-            <h2>Votre appareil est‑il fonctionnel ?</h2>
-            <div class="row">
-              ${checkbox('Face ID / Touch ID', 'bio', state)}
-              ${checkbox('Écran tactile OK', 'touch', state)}
-              ${checkbox('Caméras OK', 'cams', state)}
-              ${checkbox('Haut‑parleurs / micro OK', 'audio', state)}
-              ${checkbox('Réseau / Wi‑Fi OK', 'radio', state)}
-              ${checkbox('Aucun compte iCloud/Google actif', 'icloud', state)}
-            </div>
-          </div>
-          <div class="offer">
-            <div class="badge">🎯 Offre estimée</div>
-            <div id="offerText" class="muted">Remplissez les informations ci‑dessus.</div>
-          </div>
-          <div class="actions">
-            <button class="btn ghost" id="back">Retour</button>
-            <button class="btn primary" id="see">Voir l’estimation</button>
-          </div>
-        `;
-        document.getElementById('back').onclick = prev;
-        document.getElementById('see').onclick = showOffer;
-        // bind checkboxes
-        for (const id of ['bio','touch','cams','audio','radio','icloud']){
-          target.querySelector(`#cb_${id}`).addEventListener('change', e=>{ state[id] = e.target.checked; updateOffer(state); });
-        }
-        updateOffer(state);
-      },
-      valid: _s => true
-    }
-  ];
+  /* (Optionnel) barème de base par modèle/capacité (exemple) */
+  const BASE = {
+    "iPhone 16 Pro Max":{"128 Go":780,"256 Go":830,"512 Go":900,"1 To":980},
+    "iPhone 16 Pro":{"128 Go":720,"256 Go":770,"512 Go":840,"1 To":920},
+    "iPhone 16 Plus":{"128 Go":520,"256 Go":560,"512 Go":620},
+    "iPhone 16":{"128 Go":480,"256 Go":520,"512 Go":580},
+    "iPhone 15 Pro Max":{"256 Go":680,"512 Go":760,"1 To":820},
+    "iPhone 15 Pro":{"128 Go":600,"256 Go":650,"512 Go":720,"1 To":780},
+    "iPhone 15 Plus":{"128 Go":430,"256 Go":480,"512 Go":540},
+    "iPhone 15":{"128 Go":400,"256 Go":450,"512 Go":510},
+    "iPhone 14 Pro Max":{"128 Go":520,"256 Go":560,"512 Go":620,"1 To":680},
+    "iPhone 14 Pro":{"128 Go":470,"256 Go":520,"512 Go":570,"1 To":630},
+    "iPhone 14 Plus":{"128 Go":360,"256 Go":400,"512 Go":460},
+    "iPhone 14":{"128 Go":330,"256 Go":370,"512 Go":430},
+    "iPhone 13 Pro Max":{"128 Go":450,"256 Go":500,"512 Go":560,"1 To":620},
+    "iPhone 13 Pro":{"128 Go":420,"256 Go":470,"512 Go":530,"1 To":590},
+    "iPhone 13":{"128 Go":350,"256 Go":390,"512 Go":450},
+    "iPhone 13 mini":{"128 Go":320,"256 Go":360,"512 Go":420},
+    "iPhone 12 Pro Max":{"128 Go":380,"256 Go":420,"512 Go":480},
+    "iPhone 12 Pro":{"128 Go":360,"256 Go":400,"512 Go":460},
+    "iPhone 12":{"64 Go":250,"128 Go":300,"256 Go":350},
+    "iPhone 12 mini":{"64 Go":220,"128 Go":270,"256 Go":320},
+    "iPhone 11 Pro Max":{"64 Go":320,"256 Go":360,"512 Go":410},
+    "iPhone 11 Pro":{"64 Go":300,"256 Go":340,"512 Go":390},
+    "iPhone 11":{"64 Go":230,"128 Go":260,"256 Go":300},
+    "iPhone XS Max":{"64 Go":210,"256 Go":240,"512 Go":280},
+    "iPhone XS":{"64 Go":190,"256 Go":220,"512 Go":260},
+    "iPhone XR":{"64 Go":180,"128 Go":210,"256 Go":240},
+    "iPhone X":{"64 Go":160,"256 Go":190}
+  };
 
-  // ---------- Small helpers ----------
-  const el = sel => document.querySelector(sel);
+  /* =====================
+     État & helpers
+     ===================== */
+  const el = s => document.querySelector(s);
   const panel = el('#panel');
   let stepIndex = 0;
-  const state = {};
+  const state = {}; // brand, model, capacity, screen, body, battery, bio, icloud_ok, etc.
+
+  function updateRecycleFlag(s){
+    const recycle = s.brand && s.brand !== 'Apple';
+    const note = el('#recycleNote');
+    if(note) note.style.display = recycle ? 'block' : 'none';
+    s.recycle = recycle;
+  }
 
   function buildModelOptions(s){
     if(!s.brand) return '<option value="" hidden>Sélectionnez une marque d’abord</option>';
@@ -363,20 +236,20 @@
   }
   function buildCapacityOptions(s){
     if(!s.brand || !s.model) return '<option value="" hidden>Sélectionnez un modèle d’abord</option>';
-    const caps = MODELS[s.brand]?.[s.model]||[];
+    const caps = (MODELS[s.brand] && MODELS[s.brand][s.model]) ? MODELS[s.brand][s.model] : [];
     return ['<option value="" hidden>Choisir…</option>', ...caps.map(c=>`<option ${s.capacity===c?'selected':''}>${c}</option>`)].join('');
   }
   function radioGroup(key, options, s){
     return options.map(([title, sub, tag])=>{
       const id = `${key}_${title.replace(/[^a-z0-9]/gi,'').toLowerCase()}`;
-      return `<label class="card" style="padding:12px; border-radius:14px; background:#0f1320; border:1px solid rgba(255,255,255,.08); display:grid; gap:4px">
-        <div style="display:flex; align-items:center; gap:10px">
-          <input type="radio" name="${key}" id="${id}" value="${title}" ${s[key]===title? 'checked':''}>
+      return `<label class="card" style="padding:12px;border-radius:14px;background:#0f1320;border:1px solid rgba(255,255,255,.08);display:grid;gap:4px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <input type="radio" name="${key}" id="${id}" value="${title}" ${s[key]===title?'checked':''}>
           <strong>${title}</strong>
-          ${tag==='warn'?'<span class="chip" style="margin-left:auto; color:#ffd166; border-color:rgba(255,209,102,.45)">peut réduire le prix</span>':''}
+          ${tag==='warn'?'<span class="chip" style="margin-left:auto;color:#ffd166;border-color:rgba(255,209,102,.45)">peut réduire le prix</span>':''}
         </div>
         <span class="muted" style="margin-left:34px">${sub||''}</span>
-      </label>`
+      </label>`;
     }).join('');
   }
   function listenRadios(name, s){
@@ -384,90 +257,302 @@
       r.addEventListener('change', e=>{ s[name] = e.target.value; updateQuickOffer(s); });
     });
   }
-  function checkbox(label, key, s){
-    return `<label class="card" style="padding:12px; border-radius:14px; background:#0f1320; border:1px solid rgba(255,255,255,.08); display:flex; align-items:center; gap:10px">
+  function checkboxCard(label, key, s){
+    return `<label class="card" style="padding:12px;border-radius:14px;background:#0f1320;border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px">
       <input type="checkbox" id="cb_${key}" ${s[key]? 'checked':''}> ${label}
-    </label>`
+    </label>`;
+  }
+  function buildSwitch(id,label,on,show){
+    if(!show) return '';
+    return `
+      <div class="switch-row">
+        <div class="label">${label}</div>
+        <button type="button" class="btnswitch ${on?'on':''}" id="${id}" aria-pressed="${on}">
+          <span class="dot" aria-hidden="true"></span>
+          <span class="txt">${on?'ON':'OFF'}</span>
+        </button>
+      </div>`;
   }
   function nav(){
     return `<div class="actions">
       <button class="btn ghost" id="back" ${stepIndex===0?'disabled':''}>Retour</button>
       <button class="btn primary" id="next">Suivant</button>
-    </div>`
+    </div>`;
   }
-  function next(){ if(STEPS[stepIndex].valid(state)){ stepIndex=Math.min(stepIndex+1, STEPS.length-1); render(); } }
-  function prev(){ stepIndex=Math.max(stepIndex-1, 0); render(); }
+  function setTopBack(){
+    const topBack = el('#topBack');
+    if(topBack){
+      topBack.disabled = (stepIndex===0);
+      topBack.onclick = () => { if(stepIndex>0) prev(); };
+    }
+  }
+
+  /* =====================
+     Règles & Pricing
+     ===================== */
+  function mustRecycle(s){
+    // Non-iPhone => recyclage
+    if (s.brand && s.brand !== 'Apple') return true;
+    // iPhone requis : Face ID / Touch ID présent
+    if (s.brand === 'Apple' && s.bio !== true) return true;
+    // iCloud/Google doit être désactivé
+    if (s.icloud_ok !== true) return true;
+    // Doit avoir choisi modèle/capacité
+    if (!s.model || !s.capacity) return true; // empêche estimation si incomplet
+    return false;
+  }
+
+  // Ajustements
+  const AJ = {
+    screen: {"Parfait":0,"Micro-rayures":-20,"Fissuré":-150},
+    body:   {"Comme neuf":0,"Bon état":-10,"Marqué":-70},
+    battery: function(pct){ if(typeof pct!=='number') return 0; return Math.round((pct-85)*3); }
+  };
+
+  function basePrice(s){
+    // Si une base existe pour ce modèle/capacité, on l’utilise, sinon fallback simple
+    const byModel = BASE[s.model] && BASE[s.model][s.capacity];
+    if (typeof byModel === 'number') return byModel;
+    let base = 400; // fallback iPhone
+    // Capacité bonus
+    if(/256/.test(s.capacity)) base += 40; else if(/512|1 To/.test(s.capacity)) base += 90;
+    // Génération (très simple)
+    if(/16|15|14/.test(s.model)) base += 120;
+    else if(/13|12/.test(s.model)) base += 60;
+    else base += 20; // X/XS/XR/11
+    return base;
+  }
 
   function priceEngine(s){
-    // --- Example pricing engine (placeholder) ---
-    // base by brand + model
-    let base = 0;
-    if(!s.brand||!s.model) return 0;
-    const baseTable = {
-      Apple: 400, Samsung: 250, Xiaomi: 180
-    };
-    base = baseTable[s.brand] || 150;
-    // model tier
-    if(/14|S22|11/.test(s.model)) base += 150; else if(/13|A54|Note 12/.test(s.model)) base += 80;
-    // capacity bonus
-    if(/256/.test(s.capacity)) base += 40; else if(/512/.test(s.capacity)) base += 90;
-    // screen/body
-    if(s.screen==='Micro-rayures') base -= 20; if(s.screen==='Fissuré') base -= 150;
-    if(s.body==='Bon état') base -= 10; if(s.body==='Marqué') base -= 70;
-    // battery
-    if(typeof s.battery==='number'){
-      base += Math.round((s.battery-85) * 3); // +3€/pt au-dessus de 85, -3€/pt en dessous
-    }
-    // functional toggles
-    for(const k of ['bio','touch','cams','audio','radio']){ if(s[k]===false) base -= 80; }
-    if(s.icloud===false) base -= 120; // iCloud/Google actif
-
-    // floor and cap
-    return Math.max(15, Math.min(1500, Math.round(base)));
+    if (mustRecycle(s)) return 0;
+    let p = basePrice(s);
+    if (s.screen) p += AJ.screen[s.screen] || 0;
+    if (s.body)   p += AJ.body[s.body]     || 0;
+    p += AJ.battery(s.battery);
+    // Pénalités fonctionnelles (autres que FaceID/iCloud déjà bloquants)
+    if (s.touch===false) p -= 80;
+    if (s.cams===false)  p -= 80;
+    if (s.audio===false) p -= 80;
+    if (s.radio===false) p -= 80;
+    return Math.max(15, Math.min(2000, Math.round(p)));
   }
 
   function updateQuickOffer(s){
-    const box = document.getElementById('quickOffer');
-    const body = document.getElementById('quickOfferBody');
+    const box = el('#quickOffer');
+    const body = el('#quickOfferBody');
     const have = s.brand && s.model && s.capacity && s.screen && s.body && typeof s.battery==='number';
     if(have){
       box.hidden = false;
-      body.innerHTML = `Estimation provisoire : <strong>${priceEngine(s)}€</strong> (à affiner)`;
+      const p = priceEngine(s);
+      body.innerHTML = p>0 ? `Estimation provisoire : <strong>${p}€</strong> (à affiner)` : `Aucune reprise — <strong>recyclage</strong>.`;
     } else {
       body.textContent = 'Complétez les étapes pour voir l\'offre.';
     }
   }
-
   function updateOffer(s){
-    const text = document.getElementById('offerText');
+    const text = el('#offerText');
+    if(!text) return;
     const p = priceEngine(s);
     if(p>0){
       text.innerHTML = `<strong>${p}€</strong> pour ${s.brand||''} ${s.model||''} ${s.capacity||''}.`;
+    } else {
+      text.textContent = 'Aucune reprise — recyclage uniquement.';
     }
   }
-
   function showOffer(){
+    if (mustRecycle(state)) { showRecycle(); return; }
     updateOffer(state);
-    alert(`Offre indicative: ${priceEngine(state)}€\n\n(À confirmer en magasin après diagnostic).`);
+    alert(`Offre indicative: ${priceEngine(state)}€\n(À confirmer après diagnostic en magasin).`);
   }
+  function showRecycle(){ alert('Appareil dirigé vers le recyclage (pas de rachat).'); }
+
+  /* =====================
+     Étapes (5)
+     ===================== */
+  const STEPS = [
+    // 1) Appareil
+    {
+      key:'device', title:'Votre appareil',
+      render(target, s){
+        target.innerHTML = `
+          <div class="step">
+            <h2>Quelle est la marque de votre smartphone ?</h2>
+            <p class="hint">Sélectionnez votre marque, puis votre modèle et la capacité.</p>
+            <div class="field">
+              <label for="brand">Marque</label>
+              <select id="brand" class="control" required>
+                <option value="" hidden>Choisir…</option>
+                ${Object.keys(MODELS).map(m=>`<option ${s.brand===m?'selected':''}>${m}</option>`).join('')}
+              </select>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label for="model">Modèle</label>
+                <select id="model" class="control" ${s.brand?"":"disabled"}>${buildModelOptions(s)}</select>
+              </div>
+              <div class="field">
+                <label for="capacity">Capacité</label>
+                <select id="capacity" class="control" ${s.model?"":"disabled"}>${buildCapacityOptions(s)}</select>
+              </div>
+            </div>
+          </div>
+          ${nav()}
+        `;
+        target.querySelector('#brand').addEventListener('change', e=>{
+          s.brand = e.target.value || undefined; s.model=undefined; s.capacity=undefined;
+          updateRecycleFlag(s); render();
+        });
+        const m = target.querySelector('#model'); if(m) m.addEventListener('change', e=>{ s.model=e.target.value||undefined; s.capacity=undefined; updateRecycleFlag(s); render(); });
+        const c = target.querySelector('#capacity'); if(c) c.addEventListener('change', e=>{ s.capacity=e.target.value||undefined; updateQuickOffer(s); });
+      },
+      valid: s => !!(s.brand && s.model && s.capacity)
+    },
+    // 2) Écran
+    {
+      key:'screen', title:"État de l'écran",
+      render(target, s){
+        target.innerHTML = `
+          <div class="step">
+            <h2>Quel est l'état de l'écran ?</h2>
+            <div class="row">
+              ${radioGroup('screen', [
+                ['Parfait','Aucun défaut'],
+                ['Micro-rayures','Légères traces d’usage'],
+                ['Fissuré','Nécessite un remplacement','warn']
+              ], s)}
+            </div>
+          </div>
+          ${nav()}
+        `;
+        listenRadios('screen', s);
+      },
+      valid: s => !!s.screen
+    },
+    // 3) Coque & contour
+    {
+      key:'body', title:'Coque & contour',
+      render(target, s){
+        target.innerHTML = `
+          <div class="step">
+            <h2>Quel est l'état de la coque et du contour ?</h2>
+            <div class="row">
+              ${radioGroup('body', [
+                ['Comme neuf','Aucune marque'],
+                ['Bon état','Micro-chocs / rayures légères'],
+                ['Marqué','Rayures, enfoncements visibles','warn']
+              ], s)}
+            </div>
+          </div>
+          ${nav()}
+        `;
+        listenRadios('body', s);
+      },
+      valid: s => !!s.body
+    },
+    // 4) Batterie
+    {
+      key:'battery', title:'Capacité de batterie',
+      render(target, s){
+        target.innerHTML = `
+          <div class="step">
+            <h2>Capacité maximale de la batterie</h2>
+            <p class="hint">Pour iPhone, ouvrez <span class="tooltip" data-tip="Réglages › Batterie › État de la batterie">Réglages ▸ Batterie</span>.</p>
+            <div class="row">
+              <div class="field">
+                <label for="battery">Capacité (%)</label>
+                <input id="battery" class="control" type="number" min="50" max="100" step="1" placeholder="Ex. 88" value="${typeof s.battery==='number'?s.battery:''}">
+              </div>
+              <div class="field">
+                <label for="cycles">Cycles de charge (optionnel)</label>
+                <input id="cycles" class="control" type="number" min="0" step="1" placeholder="Ex. 320" value="${typeof s.cycles==='number'?s.cycles:''}">
+              </div>
+            </div>
+          </div>
+          ${nav()}
+        `;
+        target.querySelector('#battery').addEventListener('input', e=>{ s.battery = +e.target.value || undefined; updateQuickOffer(s); });
+        target.querySelector('#cycles').addEventListener('input', e=>{ s.cycles = +e.target.value || undefined; });
+      },
+      valid: s => typeof s.battery === 'number' && s.battery >= 50 && s.battery <= 100
+    },
+    // 5) Fonctionnalités (switchs)
+    {
+      key:'functional', title:'Fonctionnalités',
+      render(target, s){
+        const isIPhone = s.brand === 'Apple';
+        target.innerHTML = `
+          <div class="step">
+            <h2>Votre appareil est-il fonctionnel ?</h2>
+            <p class="hint">Appuie pour basculer : <strong>Vert = ON</strong> (OK), <strong>Rouge = OFF</strong> (recyclage).</p>
+            <div class="panel" style="gap:12px">
+              ${buildSwitch('sw_faceid','Face ID / Touch ID présent', !!s.bio, isIPhone)}
+              ${buildSwitch('sw_icloud','Aucun compte iCloud/Google actif', !!s.icloud_ok, true)}
+              ${buildSwitch('sw_touch','Écran tactile OK', s.touch!==false, true)}
+              ${buildSwitch('sw_cams','Caméras OK', s.cams!==false, true)}
+              ${buildSwitch('sw_audio','Haut-parleurs / micro OK', s.audio!==false, true)}
+              ${buildSwitch('sw_radio','Réseau / Wi-Fi OK', s.radio!==false, true)}
+            </div>
+          </div>
+
+          <div class="offer">
+            <div class="badge">🎯 Offre estimée</div>
+            <div id="offerText" class="muted">Remplissez les informations ci-dessus.</div>
+          </div>
+
+          <div class="actions">
+            <button class="btn ghost" id="back">Retour</button>
+            <button class="btn primary" id="see">Voir l’estimation</button>
+          </div>
+        `;
+
+        // Bind switches
+        const bind = (id,key)=>{
+          const b = target.querySelector('#'+id); if(!b) return;
+          b.addEventListener('click', ()=>{
+            const on = !b.classList.contains('on');
+            b.classList.toggle('on', on);
+            b.setAttribute('aria-pressed', on);
+            b.querySelector('.txt').textContent = on ? 'ON' : 'OFF';
+            s[key] = on;
+            updateOffer(s);
+          });
+        };
+        if(isIPhone) bind('sw_faceid','bio');
+        bind('sw_icloud','icloud_ok');
+        bind('sw_touch','touch');
+        bind('sw_cams','cams');
+        bind('sw_audio','audio');
+        bind('sw_radio','radio');
+
+        document.getElementById('back').onclick = prev;
+        document.getElementById('see').onclick = () => { if(mustRecycle(s)) showRecycle(); else showOffer(); };
+        updateOffer(s);
+      },
+      valid: _s => true
+    }
+  ];
+
+  /* =====================
+     Navigation & rendu
+     ===================== */
+  function next(){ if(STEPS[stepIndex].valid(state)){ stepIndex = Math.max(0, Math.min(stepIndex+1, STEPS.length-1)); render(); } }
+  function prev(){ stepIndex = Math.max(stepIndex-1, 0); render(); }
 
   function render(){
-    // bar + title
     const step = STEPS[stepIndex];
-    document.getElementById('stepMeta').textContent = `Étape ${stepIndex+1}/${STEPS.length}`;
-    document.getElementById('stepTitle').textContent = step.title;
-    const pct = ((stepIndex)/(STEPS.length-1))*100; // fill to 100% on last step
-    document.getElementById('progressBar').style.inset = `0 ${100-pct}% 0 0`;
-
-    // main panel
+    el('#stepMeta').textContent = `Étape ${stepIndex+1}/${STEPS.length}`;
+    el('#stepTitle').textContent = step.title;
+    const pct = (stepIndex)/(STEPS.length-1)*100;
+    el('#progressBar').style.inset = `0 ${100-pct}% 0 0`;
+    setTopBack();
     step.render(panel, state);
-    // nav buttons
-    const nextBtn = panel.querySelector('#next');
-    if(nextBtn) nextBtn.addEventListener('click', next);
-    const backBtn = panel.querySelector('#back');
-    if(backBtn) backBtn.addEventListener('click', prev);
+    const nextBtn = panel.querySelector('#next'); if(nextBtn) nextBtn.addEventListener('click', next);
+    const backBtn = panel.querySelector('#back'); if(backBtn) backBtn.addEventListener('click', prev);
   }
 
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && stepIndex>0) prev(); });
+
+  // Boot
   render();
 </script>
 </body>

@@ -1,399 +1,474 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulateur de Reprise - Pamko</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f7f8fa; color: #000; }
-        main { display: flex; flex-direction: row; min-height: 100vh; }
-        .left-section { width: 40%; background-color: #f7f8fa; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 30px; }
-        .left-section img { width: 70%; height: auto; margin-bottom: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }
-        .device-info { display: none; background-color: #fff; padding: 15px; border-radius: 10px; width: 80%; text-align: center; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); font-weight: bold; font-size: 18px; }
-        .right-section { width: 60%; padding: 50px; background-color: #fff; border-radius: 30px 0 0 30px; box-shadow: -5px 0 15px rgba(0, 0, 0, 0.05); }
-        .progress-bar-container { width: 100%; margin-bottom: 30px; text-align: center; }
-        .progress-bar-text { font-weight: bold; margin-bottom: 10px; font-size: 18px; }
-        .progress-bar-background { width: 100%; height: 3px; background-color: #e0e0e0; position: relative; border-radius: 2px; }
-        .progress-bar-fill { width: 0%; height: 100%; background-color: #000; border-radius: 2px; transition: width 0.4s ease; }
-        .form-container, .result-container { background-color: #fff; padding: 30px; border-radius: 10px; display: none; }
-        .form-container.active, .result-container.active { display: block; }
-        .form-group { margin-bottom: 25px; }
-        .option-box { border: 1px solid #dcdcdc; border-radius: 10px; padding: 20px; margin-bottom: 20px; cursor: pointer; text-align: center; font-size: 18px; font-weight: bold; }
-        .option-box.selected { border-color: #000; background-color: #f0f0f0; }
-        select, button { width: 100%; padding: 15px; border: 1px solid #dcdcdc; border-radius: 10px; background-color: #f7f8fa; color: #000; font-size: 16px; }
-        select:focus, button:focus { outline: none; border-color: #000; }
-        button { background-color: #000; color: #fff; cursor: pointer; transition: background-color 0.3s ease; }
-        button:hover { background-color: #333; }
-        .description { font-size: 14px; color: #555; margin-bottom: 20px; }
-        @media (max-width: 992px) {
-            main { flex-direction: column; }
-            .left-section, .right-section { width: 100%; }
-            .right-section { border-radius: 0; }
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Simulateur de Reprise – Pamko</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg-1:#0b0c10;          /* fond sombre profond */
+      --bg-2:#12141b;          /* carte */
+      --text:#eaf0f6;          
+      --muted:#aab3c0;        
+      --brand-1:#2aa5ff;      /* bleu Pamko */
+      --brand-2:#67e8f9;      /* cyan accent */
+      --ok:#79ff86;
+      --warn:#ffd166;
+      --err:#ff6188;
+      --radius:18px;
+      --shadow:0 10px 25px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:Poppins, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      color:var(--text);
+      background: radial-gradient(1200px 700px at 20% 0%, rgba(103,232,249,0.12), transparent 55%),
+                  radial-gradient(900px 600px at 80% 10%, rgba(42,165,255,0.10), transparent 60%),
+                  linear-gradient(180deg, #0a0c11, #0b0c10 60%);
+      display:grid; place-items:center; padding:24px;
+    }
+
+    .app{width:min(1100px, 100%); display:grid; gap:22px}
+
+    header{
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
+    }
+    .title{
+      display:flex; align-items:center; gap:14px;
+    }
+    .logo{width:44px; height:44px; background:linear-gradient(135deg,var(--brand-1),var(--brand-2)); border-radius:12px; display:grid; place-items:center; font-weight:700; color:#001219; box-shadow: var(--shadow)}
+    h1{font-size:clamp(20px, 3.4vw, 32px); margin:0; letter-spacing:.2px}
+    .subtitle{margin:2px 0 0; color:var(--muted); font-size:14px}
+
+    .card{background:var(--bg-2); border:1px solid rgba(255,255,255,.06); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px}
+
+    /* Progress */
+    .progress{position:relative; height:8px; background:rgba(255,255,255,.08); border-radius:999px; overflow:hidden}
+    .progress__bar{position:absolute; inset:0 100% 0 0; background:linear-gradient(90deg, var(--brand-1), var(--brand-2)); transition:inset .35s ease;}
+    .progress__meta{display:flex; justify-content:space-between; font-size:12px; color:var(--muted); margin-top:10px}
+
+    /* Grid */
+    .content{display:grid; grid-template-columns: 360px 1fr; gap:20px}
+    @media (max-width: 900px){ .content{grid-template-columns:1fr;}}
+
+    .aside{
+      display:grid; gap:14px; align-content:start;
+    }
+    .aside .hero{
+      background:linear-gradient(135deg, rgba(42,165,255,.18), rgba(103,232,249,.14));
+      border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); padding:16px; text-align:center
+    }
+    .hero img{width:min(260px, 100%); filter: drop-shadow(0 8px 24px rgba(0,0,0,.35));}
+
+    .panel{display:grid; gap:18px}
+    .step h2{margin:0 0 8px; font-size:clamp(18px, 2.6vw, 24px)}
+    .hint{color:var(--muted); font-size:13px; margin-top:-4px}
+
+    /* Form controls */
+    label{font-weight:600; font-size:14px}
+    .field{display:grid; gap:8px}
+    .control{appearance:none; width:100%; padding:12px 14px; border-radius:12px; color:var(--text); background:#0f1320; border:1px solid rgba(255,255,255,.1)}
+    .control:focus{outline:none; border-color:var(--brand-2); box-shadow:0 0 0 4px rgba(103,232,249,.15)}
+    .row{display:grid; grid-template-columns:repeat(2,1fr); gap:14px}
+    @media (max-width: 720px){ .row{grid-template-columns:1fr} }
+
+    .muted{color:var(--muted)}
+
+    /* Footer actions */
+    .actions{display:flex; gap:12px; justify-content:flex-end}
+    .btn{border:0; padding:12px 16px; border-radius:12px; font-weight:600; cursor:pointer}
+    .btn.primary{background:linear-gradient(135deg, var(--brand-1), var(--brand-2)); color:#001219}
+    .btn.ghost{background:transparent; border:1px solid rgba(255,255,255,.12); color:var(--text)}
+    .btn[disabled]{opacity:.5; cursor:not-allowed}
+
+    /* Offer */
+    .offer{
+      border:1px dashed rgba(103,232,249,.45);
+      background:linear-gradient(180deg, rgba(103,232,249,.07), rgba(103,232,249,0));
+      border-radius:16px; padding:16px; display:grid; gap:10px
+    }
+    .badge{display:inline-flex; align-items:center; gap:8px; font-size:12px; padding:6px 10px; border-radius:999px; background:rgba(121,255,134,.12); border:1px solid rgba(121,255,134,.35); color:#a6ffb0}
+
+    .chips{display:flex; flex-wrap:wrap; gap:8px}
+    .chip{padding:8px 10px; border:1px solid rgba(255,255,255,.14); border-radius:999px; font-size:12px; color:var(--muted)}
+
+    /* Tiny tooltip */
+    .tooltip{position:relative; cursor:help}
+    .tooltip:hover::after{content:attr(data-tip); position:absolute; left:0; bottom:120%; background:#0f1320; color:var(--text); padding:6px 8px; border-radius:8px; white-space:nowrap; border:1px solid rgba(255,255,255,.12); font-size:12px}
+  </style>
 </head>
 <body>
-    <main>
-        <div class="left-section">
-            <div class="device-info" id="device-info"></div>
-            <img id="device-image" src="https://zupimages.net/up/25/08/h4r9.png" alt="Illustration Smartphone et Argent">
+  <div class="app">
+    <header>
+      <div class="title">
+        <div class="logo">PK</div>
+        <div>
+          <h1>Simulateur de Reprise</h1>
+          <p class="subtitle">Estimez la valeur de votre smartphone en 5 étapes.</p>
         </div>
-        <div class="right-section">
-            <div class="progress-bar-container">
-                <div class="progress-bar-text" id="progress-bar-text">1/5 Votre appareil</div>
-                <div class="progress-bar-background">
-                    <div class="progress-bar-fill" id="progress-bar"></div>
-                </div>
-            </div>
+      </div>
+      <div class="chips">
+        <span class="chip">⭐ Garantie 12 mois</span>
+        <span class="chip">🇫🇷 Testé en France</span>
+        <span class="chip">⚡ Devis immédiat</span>
+      </div>
+    </header>
 
-            <div class="form-container active" id="step1">
-                <h2>Quelle est la marque de votre smartphone ?</h2>
-                <div class="form-group">
-                    <label>Marque :</label>
-                    <select id="brand"></select>
-                </div>
-                <h3>Quel est le modèle exact de votre appareil ?</h3>
-                <div class="form-group">
-                    <select id="model"></select>
-                </div>
-                <div class="form-group" id="storage-group" style="display:none;">
-                    <h3>Quelle est sa capacité ?</h3>
-                    <select id="storage"></select>
-                </div>
-                <button onclick="validateStep(2)">Suivant</button>
-            </div>
+    <section class="card">
+      <div class="progress" aria-label="Progression">
+        <div class="progress__bar" id="progressBar"></div>
+      </div>
+      <div class="progress__meta"><span id="stepMeta">Étape 1/5</span><span id="stepTitle">Votre appareil</span></div>
+    </section>
 
-            <div class="form-container" id="step2">
-                <h2>Quel est l'état de l'écran ?</h2>
-                <div class="form-group" id="screen-conditions"></div>
-                <button onclick="validateStep(3)">Suivant</button>
-            </div>
-
-            <div class="form-container" id="step3">
-                <h2>Quel est l'état de la coque et du contour ?</h2>
-                <div class="form-group" id="body-conditions"></div>
-                <button onclick="validateStep(4)">Suivant</button>
-            </div>
-
-            <div class="form-container" id="step4">
-                <h2>Capacité maximale de la batterie</h2>
-                <div class="form-group" id="battery-capacity"></div>
-                <button onclick="validateStep(5)">Suivant</button>
-            </div>
-
-            <div class="form-container" id="step5">
-                <h2>Votre appareil est-il fonctionnel ?</h2>
-                <div class="form-group" id="functionality-status"></div>
-                <button onclick="calculateEstimate()">Voir l'estimation</button>
-            </div>
-
-            <div class="result-container" id="result-container">
-                <h2>Notre offre de reprise</h2>
-                <p id="result-text"></p>
-            </div>
+    <section class="card content">
+      <aside class="aside">
+        <div class="hero">
+          <img src="https://zupimages.net/up/25/08/h4r9.png" alt="Mascotte reprise smartphone"/>
         </div>
-    </main>
+        <div class="offer" id="quickOffer" hidden>
+          <span class="badge">💡 Estimation rapide</span>
+          <div id="quickOfferBody" class="muted">Complétez les étapes pour voir l'offre.</div>
+        </div>
+      </aside>
 
-    <script>
-      const priceConfig = {
-  "Apple": {
-    "iPhone 2G": {
-      image: "https://zupimages.net/up/25/08/cp9j.png",
-      storage: {64: 0, 128: 0, 256: 0}
-    }, 
-    "iPhone 3G": {
-      image: "https://zupimages.net/up/25/08/mla7.png",
-      storage: {64: 0, 128: 0, 256: 0}
+      <div class="panel" id="panel"></div>
+    </section>
+  </div>
+
+<script>
+  // ---------- Minimal data (example; replace with real catalog later) ----------
+  const MODELS = {
+    Apple: {
+      "iPhone 16 Pro Max": ["128 Go", "256 Go", "512 Go", "1 To"],
+      "iPhone 16 Pro": ["128 Go", "256 Go", "512 Go", "1 To"],
+      "iPhone 16 Plus": ["128 Go", "256 Go", "512 Go"],
+      "iPhone 16": ["128 Go", "256 Go", "512 Go"],
+
+      "iPhone 15 Pro Max": ["256 Go", "512 Go", "1 To"],
+      "iPhone 15 Pro": ["128 Go", "256 Go", "512 Go", "1 To"],
+      "iPhone 15 Plus": ["128 Go", "256 Go", "512 Go"],
+      "iPhone 15": ["128 Go", "256 Go", "512 Go"],
+
+      "iPhone 14 Pro Max": ["128 Go", "256 Go", "512 Go", "1 To"],
+      "iPhone 14 Pro": ["128 Go", "256 Go", "512 Go", "1 To"],
+      "iPhone 14 Plus": ["128 Go", "256 Go", "512 Go"],
+      "iPhone 14": ["128 Go", "256 Go", "512 Go"],
+
+      "iPhone 13 Pro Max": ["128 Go", "256 Go", "512 Go", "1 To"],
+      "iPhone 13 Pro": ["128 Go", "256 Go", "512 Go", "1 To"],
+      "iPhone 13": ["128 Go", "256 Go", "512 Go"],
+      "iPhone 13 mini": ["128 Go", "256 Go", "512 Go"],
+
+      "iPhone 12 Pro Max": ["128 Go", "256 Go", "512 Go"],
+      "iPhone 12 Pro": ["128 Go", "256 Go", "512 Go"],
+      "iPhone 12": ["64 Go", "128 Go", "256 Go"],
+      "iPhone 12 mini": ["64 Go", "128 Go", "256 Go"],
+
+      "iPhone 11 Pro Max": ["64 Go", "256 Go", "512 Go"],
+      "iPhone 11 Pro": ["64 Go", "256 Go", "512 Go"],
+      "iPhone 11": ["64 Go", "128 Go", "256 Go"],
+
+      "iPhone XS Max": ["64 Go", "256 Go", "512 Go"],
+      "iPhone XS": ["64 Go", "256 Go", "512 Go"],
+      "iPhone XR": ["64 Go", "128 Go", "256 Go"],
+      "iPhone X": ["64 Go", "256 Go"],
+
+      "iPhone 8 Plus": ["64 Go", "128 Go", "256 Go"],
+      "iPhone 8": ["64 Go", "128 Go", "256 Go"],
+      "iPhone 7 Plus": ["32 Go", "128 Go", "256 Go"],
+      "iPhone 7": ["32 Go", "128 Go", "256 Go"],
+
+      "iPhone 6s Plus": ["16 Go", "32 Go", "64 Go", "128 Go"],
+      "iPhone 6s": ["16 Go", "32 Go", "64 Go", "128 Go"],
+      "iPhone 6 Plus": ["16 Go", "32 Go", "64 Go", "128 Go"],
+      "iPhone 6": ["16 Go", "32 Go", "64 Go", "128 Go"],
+
+      "iPhone SE (2022)": ["64 Go", "128 Go", "256 Go"],
+      "iPhone SE (2020)": ["64 Go", "128 Go", "256 Go"],
+      "iPhone SE (2016)": ["16 Go", "32 Go", "64 Go", "128 Go"]
     },
-    "iPhone 3GS": {
-      image: "https://zupimages.net/up/25/08/mla7.png",
-      storage: {64: 0, 128: 0, 256: 0}
+    Samsung: {
+      "Galaxy S22": ["128 Go", "256 Go"],
+      "Galaxy A54": ["128 Go"]
     },
-    "iPhone 4": {
-      image: "https://zupimages.net/up/25/08/jnfi.png",
-      storage: {64: 0, 128: 0, 256: 0}
+    Xiaomi: {
+      "Redmi Note 12": ["64 Go", "128 Go"],
+      "Mi 11": ["128 Go"]
+    }
+  };
+
+  const STEPS = [
+    {
+      key: 'device',
+      title: 'Votre appareil',
+      render(target, state){
+        target.innerHTML = `
+          <div class="step">
+            <h2>Quelle est la marque de votre smartphone ?</h2>
+            <p class="hint">Sélectionnez votre marque, puis votre modèle et la capacité.</p>
+            <div class="field">
+              <label for="brand">Marque</label>
+              <select id="brand" class="control" required>
+                <option value="" hidden>Choisir…</option>
+                ${Object.keys(MODELS).map(m=>`<option ${state.brand===m?'selected':''}>${m}</option>`).join('')}
+              </select>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label for="model">Modèle</label>
+                <select id="model" class="control" ${state.brand?"":"disabled"}>
+                  ${buildModelOptions(state)}
+                </select>
+              </div>
+              <div class="field">
+                <label for="capacity">Capacité</label>
+                <select id="capacity" class="control" ${state.model?"":"disabled"}>
+                  ${buildCapacityOptions(state)}
+                </select>
+              </div>
+            </div>
+          </div>
+          ${nav()}
+        `;
+        target.querySelector('#brand').addEventListener('change', e=>{
+          state.brand = e.target.value || undefined; state.model=undefined; state.capacity=undefined; render();
+        });
+        const modelSel = target.querySelector('#model');
+        if(modelSel) modelSel.addEventListener('change', e=>{ state.model = e.target.value || undefined; state.capacity=undefined; render(); });
+        const capSel = target.querySelector('#capacity');
+        if(capSel) capSel.addEventListener('change', e=>{ state.capacity = e.target.value || undefined; updateQuickOffer(state); });
+      },
+      valid: s => !!(s.brand && s.model && s.capacity)
     },
-    "iPhone 4s": {
-      image: "https://zupimages.net/up/25/08/jnfi.png",
-      storage: {64: 0, 128: 0, 256: 0}
+    {
+      key: 'screen',
+      title: "État de l'écran",
+      render(target, state){
+        target.innerHTML = `
+          <div class="step">
+            <h2>Quel est l'état de l'écran ?</h2>
+            <div class="row">
+              ${radioGroup('screen', [
+                ['Parfait', 'Aucun défaut'],
+                ['Micro-rayures', 'Légères traces d’usage'],
+                ['Fissuré', 'Nécessite un remplacement', 'warn'],
+              ], state)}
+            </div>
+          </div>
+          ${nav()}
+        `;
+        listenRadios('screen', state);
+      },
+      valid: s => !!s.screen
     },
-    "iPhone 5": {
-      image: "https://zupimages.net/up/25/08/fqyk.png",
-      storage: {64: 0, 128: 0, 256: 0}
+    {
+      key: 'body',
+      title: 'Coque & contour',
+      render(target, state){
+        target.innerHTML = `
+          <div class="step">
+            <h2>Quel est l'état de la coque et du contour ?</h2>
+            <div class="row">
+              ${radioGroup('body', [
+                ['Comme neuf', 'Aucune marque'],
+                ['Bon état', 'Micro-chocs / rayures légères'],
+                ['Marqué', 'Rayures, enfoncements visibles', 'warn']
+              ], state)}
+            </div>
+          </div>
+          ${nav()}
+        `;
+        listenRadios('body', state);
+      },
+      valid: s => !!s.body
     },
-    "iPhone 5c": {
-      image: "https://zupimages.net/up/25/08/yzok.png",
-      storage: {64: 0, 128: 0, 256: 0}
+    {
+      key: 'battery',
+      title: 'Capacité de batterie',
+      render(target, state){
+        target.innerHTML = `
+          <div class="step">
+            <h2>Capacité maximale de la batterie</h2>
+            <p class="hint">Pour iPhone, ouvrez <span class="tooltip" data-tip="Réglages › Batterie › État de la batterie">Réglages ▸ Batterie</span>.</p>
+            <div class="row">
+              <div class="field">
+                <label for="battery">Capacité (%)</label>
+                <input id="battery" class="control" type="number" min="50" max="100" step="1" placeholder="Ex. 88" value="${state.battery??''}">
+              </div>
+              <div class="field">
+                <label for="cycles">Cycles de charge (optionnel)</label>
+                <input id="cycles" class="control" type="number" min="0" step="1" placeholder="Ex. 320" value="${state.cycles??''}">
+              </div>
+            </div>
+          </div>
+          ${nav()}
+        `;
+        target.querySelector('#battery').addEventListener('input', e=>{ state.battery = +e.target.value||undefined; updateQuickOffer(state); });
+        target.querySelector('#cycles').addEventListener('input', e=>{ state.cycles = +e.target.value||undefined; });
+      },
+      valid: s => typeof s.battery === 'number' && s.battery >= 50 && s.battery <= 100
     },
-    "iPhone 5s": {
-      image: "https://zupimages.net/up/25/08/e36p.png",
-      storage: {64: 0, 128: 0, 256: 0}
-    },
-    "iPhone 6": {
-      image: "https://zupimages.net/up/25/08/53m6.png",
-      storage: {64: 0, 128: 0, 256: 0}
-    },
-    "iPhone 6 Plus": {
-      image: "https://zupimages.net/up/25/08/ijve.png",
-      storage: {64: 0, 128: 0, 256: 0}
-    },
-    "iPhone 6s": {
-      image: "https://zupimages.net/up/25/08/pvd8.png",
-      storage: {64: 0, 128: 0, 256: 0}
-    },
-    "iPhone 6s Plus": {
-      image: "https://zupimages.net/up/25/08/q4yk.png",
-      storage: {64: 0, 128: 0, 256: 0}
-    },
-    "iPhone SE 2018": {
-      image: "https://zupimages.net/up/25/08/rwsa.png",
-      storage: {64: 0, 128: 0, 256: 0}
-    },
-    "iPhone 7": {
-      image: "https://zupimages.net/up/25/08/sl6c.png",
-      storage: {64: 0, 128: 0, 256: 0}
-    },
-    "iPhone 7 Plus": {
-      image: "https://zupimages.net/up/25/08/4b9o.png",
-      storage: {64: 0, 128: 0, 256: 0}
-    },
-    "iPhone 8": {
-      image: "https://zupimages.net/up/25/08/9q8n.png",
-      storage: {64: 0, 128: 0, 256: 0}
-    },
-    "iPhone 8 Plus": {
-      image: "https://zupimages.net/up/25/08/qyth.png",
-      storage: {64: 0, 128: 0, 256: 0}
-    },
-    "iPhone X": {
-      image: "https://zupimages.net/up/25/08/ri50.png",
-      storage: {64: 0, 128: 0, 256: 0}
-    },
-    "iPhone XR": {
-      image: "https://zupimages.net/up/25/08/oq34.png",
-      storage: {64: 110, 128: 120, 256: 130}
-    },
-    "iPhone XS": {
-      image: "https://zupimages.net/up/25/08/pvsh.png",
-      storage: {64: 130, 256: 150, 512: 170}
-    },
-    "iPhone XS Max": {
-      image: "https://zupimages.net/up/25/08/7kl2.png",
-      storage: {64: 140, 256: 160, 512: 180}
-    },
-    "iPhone SE (2020)": {
-      image: "https://zupimages.net/up/25/08/4e7z.png",
-      storage: {64: 100, 128: 120, 256: 140}
-    },    
-    "iPhone SE (2022)": {
-      image: "https://zupimages.net/up/25/08/bkm9.png",
-      storage: {64: 150, 128: 170, 256: 190}
-    },
-    "iPhone 11": {
-      image: "https://zupimages.net/up/25/08/zr8y.png",
-      storage: {64: 150, 128: 170, 256: 190}
-    },
-    "iPhone 11 Pro": {
-      image: "https://zupimages.net/up/25/08/2t3j.png",
-      storage: {64: 200, 256: 220, 512: 240}
-    },
-    "iPhone 11 Pro Max": {
-      image: "https://zupimages.net/up/25/08/tv8e.png",
-      storage: {64: 220, 256: 240, 512: 260}
-    },
-    "iPhone 12": {
-      image: "https://zupimages.net/up/25/08/50vs.png",
-      storage: {64: 250, 128: 270, 256: 290}
-    },
-    "iPhone 12 Mini": {
-      image: "https://zupimages.net/up/25/08/u629.png",
-      storage: {64: 230, 128: 250, 256: 270}
-    },
-    "iPhone 12 Pro": {
-      image: "https://zupimages.net/up/25/08/0uyh.png",
-      storage: {128: 300, 256: 320, 512: 340}
-    },
-    "iPhone 12 Pro Max": {
-      image: "https://zupimages.net/up/25/08/q4qa.png",
-      storage: {128: 320, 256: 340, 512: 360}
-    },
-    "iPhone 13": {
-      image: "https://zupimages.net/up/25/08/ihry.png",
-      storage: {128: 350, 256: 370, 512: 390}
-    },
-    "iPhone 13 Mini": {
-      image: "https://zupimages.net/up/25/08/vux8.png",
-      storage: {128: 320, 256: 350, 512: 370}
-    },
-    "iPhone 13 Pro": {
-      image: "https://zupimages.net/up/25/08/30ul.png",
-      storage: {128: 400, 256: 420, 512: 440, 1000: 460} // 1 To (1000 Go)
-    },
-    "iPhone 13 Pro Max": {
-      image: "https://zupimages.net/up/25/08/svvx.png",
-      storage: {128: 420, 256: 440, 512: 460, 1000: 480}
-    },
-    "iPhone 14": {
-      image: "https://zupimages.net/up/25/08/7xs9.png",
-      storage: {128: 450, 256: 470, 512: 490}
-    },
-    "iPhone 14 Plus": {
-      image: "https://zupimages.net/up/25/08/lygc.png",
-      storage: {128: 470, 256: 490, 512: 510}
-    },
-    "iPhone 14 Pro": {
-      image: "https://zupimages.net/up/25/08/vhcz.png",
-      storage: {128: 500, 256: 520, 512: 540, 1000: 560}
-    },
-    "iPhone 14 Pro Max": {
-      image: "https://zupimages.net/up/25/08/s45n.png",
-      storage: {128: 520, 256: 540, 512: 560, 1000: 580}
-    },
-    "iPhone 15": {
-      image: "https://zupimages.net/up/25/08/oe0j.png",
-      storage: {128: 550, 256: 570, 512: 590}
-    },
-    "iPhone 15 Plus": {
-      image: "https://zupimages.net/up/25/08/z3n5.png",
-      storage: {128: 570, 256: 590, 512: 610}
-    },
-    "iPhone 15 Pro": {
-      image: "https://zupimages.net/up/25/08/hn7o.jpg",
-      storage: {256: 600, 512: 620, 1000: 640} // Pas de 128 Go sur ce modèle
-    },
-    "iPhone 15 Pro Max": {
-      image: "https://zupimages.net/up/25/08/5xvg.jpg",
-      storage: {256: 620, 512: 640, 1000: 660}
-    },
-    "iPhone 16": {
-      image: "https://zupimages.net/up/25/08/tw3h.png",
-      storage: {128: 650, 256: 670, 512: 690}
-    },
-    "iPhone 16 Plus": {
-      image: "https://zupimages.net/up/25/08/gzkd.png",
-      storage: {128: 670, 256: 690, 512: 710}
-    },
-    "iPhone 16 Pro": {
-      image: "https://zupimages.net/up/25/08/srwe.png",
-      storage: {256: 700, 512: 720, 1000: 740} // Modèle Pro à partir de 256 Go
-    },
-    "iPhone 16 Pro Max": {
-      image: "https://zupimages.net/up/25/08/rc7q.png",
-      storage: {256: 720, 512: 740, 1000: 760}
-    },
-    "iPhone 16e": {
-    image: "https://zupimages.net/up/25/08/v0uj.png",
-    storage: {128: 600, 256: 620, 512: 640} // Aligné sur un modèle intermédiaire
+    {
+      key: 'functional',
+      title: 'Fonctionnalités',
+      render(target, state){
+        target.innerHTML = `
+          <div class="step">
+            <h2>Votre appareil est‑il fonctionnel ?</h2>
+            <div class="row">
+              ${checkbox('Face ID / Touch ID', 'bio', state)}
+              ${checkbox('Écran tactile OK', 'touch', state)}
+              ${checkbox('Caméras OK', 'cams', state)}
+              ${checkbox('Haut‑parleurs / micro OK', 'audio', state)}
+              ${checkbox('Réseau / Wi‑Fi OK', 'radio', state)}
+              ${checkbox('Aucun compte iCloud/Google actif', 'icloud', state)}
+            </div>
+          </div>
+          <div class="offer">
+            <div class="badge">🎯 Offre estimée</div>
+            <div id="offerText" class="muted">Remplissez les informations ci‑dessus.</div>
+          </div>
+          <div class="actions">
+            <button class="btn ghost" id="back">Retour</button>
+            <button class="btn primary" id="see">Voir l’estimation</button>
+          </div>
+        `;
+        document.getElementById('back').onclick = prev;
+        document.getElementById('see').onclick = showOffer;
+        // bind checkboxes
+        for (const id of ['bio','touch','cams','audio','radio','icloud']){
+          target.querySelector(`#cb_${id}`).addEventListener('change', e=>{ state[id] = e.target.checked; updateOffer(state); });
+        }
+        updateOffer(state);
+      },
+      valid: _s => true
+    }
+  ];
+
+  // ---------- Small helpers ----------
+  const el = sel => document.querySelector(sel);
+  const panel = el('#panel');
+  let stepIndex = 0;
+  const state = {};
+
+  function buildModelOptions(s){
+    if(!s.brand) return '<option value="" hidden>Sélectionnez une marque d’abord</option>';
+    const models = Object.keys(MODELS[s.brand]||{});
+    return ['<option value="" hidden>Choisir…</option>', ...models.map(m=>`<option ${s.model===m?'selected':''}>${m}</option>`)].join('');
+  }
+  function buildCapacityOptions(s){
+    if(!s.brand || !s.model) return '<option value="" hidden>Sélectionnez un modèle d’abord</option>';
+    const caps = MODELS[s.brand]?.[s.model]||[];
+    return ['<option value="" hidden>Choisir…</option>', ...caps.map(c=>`<option ${s.capacity===c?'selected':''}>${c}</option>`)].join('');
+  }
+  function radioGroup(key, options, s){
+    return options.map(([title, sub, tag])=>{
+      const id = `${key}_${title.replace(/[^a-z0-9]/gi,'').toLowerCase()}`;
+      return `<label class="card" style="padding:12px; border-radius:14px; background:#0f1320; border:1px solid rgba(255,255,255,.08); display:grid; gap:4px">
+        <div style="display:flex; align-items:center; gap:10px">
+          <input type="radio" name="${key}" id="${id}" value="${title}" ${s[key]===title? 'checked':''}>
+          <strong>${title}</strong>
+          ${tag==='warn'?'<span class="chip" style="margin-left:auto; color:#ffd166; border-color:rgba(255,209,102,.45)">peut réduire le prix</span>':''}
+        </div>
+        <span class="muted" style="margin-left:34px">${sub||''}</span>
+      </label>`
+    }).join('');
+  }
+  function listenRadios(name, s){
+    panel.querySelectorAll(`input[name="${name}"]`).forEach(r=>{
+      r.addEventListener('change', e=>{ s[name] = e.target.value; updateQuickOffer(s); });
+    });
+  }
+  function checkbox(label, key, s){
+    return `<label class="card" style="padding:12px; border-radius:14px; background:#0f1320; border:1px solid rgba(255,255,255,.08); display:flex; align-items:center; gap:10px">
+      <input type="checkbox" id="cb_${key}" ${s[key]? 'checked':''}> ${label}
+    </label>`
+  }
+  function nav(){
+    return `<div class="actions">
+      <button class="btn ghost" id="back" ${stepIndex===0?'disabled':''}>Retour</button>
+      <button class="btn primary" id="next">Suivant</button>
+    </div>`
+  }
+  function next(){ if(STEPS[stepIndex].valid(state)){ stepIndex=Math.min(stepIndex+1, STEPS.length-1); render(); } }
+  function prev(){ stepIndex=Math.max(stepIndex-1, 0); render(); }
+
+  function priceEngine(s){
+    // --- Example pricing engine (placeholder) ---
+    // base by brand + model
+    let base = 0;
+    if(!s.brand||!s.model) return 0;
+    const baseTable = {
+      Apple: 400, Samsung: 250, Xiaomi: 180
+    };
+    base = baseTable[s.brand] || 150;
+    // model tier
+    if(/14|S22|11/.test(s.model)) base += 150; else if(/13|A54|Note 12/.test(s.model)) base += 80;
+    // capacity bonus
+    if(/256/.test(s.capacity)) base += 40; else if(/512/.test(s.capacity)) base += 90;
+    // screen/body
+    if(s.screen==='Micro-rayures') base -= 20; if(s.screen==='Fissuré') base -= 150;
+    if(s.body==='Bon état') base -= 10; if(s.body==='Marqué') base -= 70;
+    // battery
+    if(typeof s.battery==='number'){
+      base += Math.round((s.battery-85) * 3); // +3€/pt au-dessus de 85, -3€/pt en dessous
+    }
+    // functional toggles
+    for(const k of ['bio','touch','cams','audio','radio']){ if(s[k]===false) base -= 80; }
+    if(s.icloud===false) base -= 120; // iCloud/Google actif
+
+    // floor and cap
+    return Math.max(15, Math.min(1500, Math.round(base)));
+  }
+
+  function updateQuickOffer(s){
+    const box = document.getElementById('quickOffer');
+    const body = document.getElementById('quickOfferBody');
+    const have = s.brand && s.model && s.capacity && s.screen && s.body && typeof s.battery==='number';
+    if(have){
+      box.hidden = false;
+      body.innerHTML = `Estimation provisoire : <strong>${priceEngine(s)}€</strong> (à affiner)`;
+    } else {
+      body.textContent = 'Complétez les étapes pour voir l\'offre.';
     }
   }
-};
 
+  function updateOffer(s){
+    const text = document.getElementById('offerText');
+    const p = priceEngine(s);
+    if(p>0){
+      text.innerHTML = `<strong>${p}€</strong> pour ${s.brand||''} ${s.model||''} ${s.capacity||''}.`;
+    }
+  }
 
-        const screenConditions = ["Cassé", "État correct", "Très bon état", "Parfait état"];
-        const bodyConditions = ["Cassés", "État correct", "Très bon état", "Parfait état"];
-        const batteryOptions = ["Plus de 85%", "Moins de 85%"];
-        const functionalityOptions = ["Fonctionnel", "Non fonctionnel"];
+  function showOffer(){
+    updateOffer(state);
+    alert(`Offre indicative: ${priceEngine(state)}€\n\n(À confirmer en magasin après diagnostic).`);
+  }
 
-        function populateOptions(selectId, options) {
-            const select = document.getElementById(selectId);
-            select.innerHTML = '<option value="">Sélectionnez une option</option>';
-            options.forEach(key => {
-                const option = document.createElement('option');
-                option.value = key;
-                option.textContent = key;
-                select.appendChild(option);
-            });
-        }
+  function render(){
+    // bar + title
+    const step = STEPS[stepIndex];
+    document.getElementById('stepMeta').textContent = `Étape ${stepIndex+1}/${STEPS.length}`;
+    document.getElementById('stepTitle').textContent = step.title;
+    const pct = ((stepIndex)/(STEPS.length-1))*100; // fill to 100% on last step
+    document.getElementById('progressBar').style.inset = `0 ${100-pct}% 0 0`;
 
-        function validateStep(step) {
-            const currentStep = step - 1;
-            document.getElementById(`step${currentStep}`).classList.remove('active');
-            document.getElementById(`step${step}`).classList.add('active');
-            updateProgressBar(step);
-            if (step === 2) populateConditionOptions('screen-conditions', screenConditions);
-            if (step === 3) populateConditionOptions('body-conditions', bodyConditions);
-            if (step === 4) populateConditionOptions('battery-capacity', batteryOptions);
-            if (step === 5) populateConditionOptions('functionality-status', functionalityOptions);
-        }
+    // main panel
+    step.render(panel, state);
+    // nav buttons
+    const nextBtn = panel.querySelector('#next');
+    if(nextBtn) nextBtn.addEventListener('click', next);
+    const backBtn = panel.querySelector('#back');
+    if(backBtn) backBtn.addEventListener('click', prev);
+  }
 
-        function populateConditionOptions(containerId, options) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = "";
-            options.forEach(option => {
-                const div = document.createElement('div');
-                div.className = 'option-box';
-                div.textContent = option;
-                div.onclick = () => {
-                    document.querySelectorAll(`#${containerId} .option-box`).forEach(el => el.classList.remove('selected'));
-                    div.classList.add('selected');
-                };
-                container.appendChild(div);
-            });
-        }
-
-        function updateProgressBar(step) {
-            const progressBar = document.getElementById('progress-bar');
-            const progressText = document.getElementById('progress-bar-text');
-            const percentage = (step / 5) * 100;
-            const stepLabels = ["Votre appareil", "État de l'écran", "État de la coque", "Capacité batterie", "Fonctionnalité"];
-            progressBar.style.width = percentage + '%';
-            progressText.textContent = `${step}/5 ${stepLabels[step - 1]}`;
-        }
-
-        function getSelectedOption(containerId) {
-            const selected = document.querySelector(`#${containerId} .option-box.selected`);
-            return selected ? selected.textContent : null;
-        }
-
-        function calculateEstimate() {
-            const brand = document.getElementById('brand').value;
-            const model = document.getElementById('model').value;
-            const storage = document.getElementById('storage').value;
-            const screen = getSelectedOption('screen-conditions');
-            const body = getSelectedOption('body-conditions');
-            const battery = getSelectedOption('battery-capacity');
-            const functionality = getSelectedOption('functionality-status');
-
-            let basePrice = priceConfig[brand]?.[model]?.storage?.[storage] || 0;
-
-            if (basePrice === 0) {
-                document.getElementById('result-text').textContent = "Votre appareil sera repris pour recyclage. ♻️";
-            } else {
-                basePrice -= (screen === "Cassé" ? 200 : 0);
-                basePrice -= (body === "Cassés" ? 150 : 0);
-                basePrice -= (battery === "Moins de 85%" ? 100 : 0);
-                basePrice -= (functionality === "Non fonctionnel" ? 300 : 0);
-                basePrice = basePrice < 0 ? 0 : basePrice;
-                document.getElementById('result-text').textContent = `🎉 Offre finale : ${basePrice}€ pour votre ${brand} ${model} ${storage} Go.`;
-            }
-            document.querySelectorAll('.form-container').forEach(div => div.classList.remove('active'));
-            document.getElementById('result-container').classList.add('active');
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            populateOptions('brand', Object.keys(priceConfig));
-            document.getElementById('brand').addEventListener('change', updateModelOptions);
-            document.getElementById('model').addEventListener('change', updateStorageAndImage);
-        });
-
-        function updateModelOptions() {
-            const brand = document.getElementById('brand').value;
-            if (priceConfig[brand]) {
-                populateOptions('model', Object.keys(priceConfig[brand]));
-                document.getElementById('model').disabled = false;
-            }
-            document.getElementById('device-image').src = "https://zupimages.net/up/25/08/h4r9.png";
-        }
-
-        function updateStorageAndImage() {
-            const brand = document.getElementById('brand').value;
-            const model = document.getElementById('model').value;
-            if (priceConfig[brand] && priceConfig[brand][model]) {
-                populateOptions('storage', Object.keys(priceConfig[brand][model].storage));
-                document.getElementById('storage-group').style.display = 'block';
-                document.getElementById('device-image').src = priceConfig[brand][model].image;
-            }
-        }
-    </script>
+  render();
+</script>
 </body>
 </html>

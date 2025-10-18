@@ -43,6 +43,7 @@
     @media (max-width:900px){.content{grid-template-columns:1fr}}
     .aside{display:grid;gap:14px;align-content:start}
     .aside .hero{
+      position:relative;
       background:linear-gradient(135deg,rgba(42,165,255,.18),rgba(103,232,249,.14));
       border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); padding:16px;
       text-align:center; min-height:320px; display:grid; place-items:center; gap:8px;
@@ -50,6 +51,12 @@
     .hero img{width:min(260px,100%); filter: drop-shadow(0 8px 24px rgba(0,0,0,.35)); opacity:1; transition:opacity .28s ease}
     .hero img.fade{opacity:0}
     .hero .caption{font-size:13px; color:var(--muted)}
+    .hero .chip-recycle{
+      position:absolute; top:12px; left:12px;
+      padding:6px 10px; border-radius:999px; font-size:12px;
+      background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.18); color:#ffd166;
+      display:none;
+    }
     .panel{display:grid;gap:18px;min-height:260px}
     .step h2{margin:0 0 8px;font-size:clamp(18px,2.6vw,24px)}
     .hint{color:var(--muted);font-size:13px;margin-top:-4px}
@@ -168,6 +175,7 @@
     <section class="card content">
       <aside class="aside">
         <div class="hero">
+          <span id="recycleChip" class="chip-recycle">♻︎ Recyclage</span>
           <img id="heroImg" src="https://zupimages.net/up/25/08/h4r9.png" alt="Aperçu téléphone" />
           <div id="heroCaption" class="caption">Pamko — Simulateur de reprise</div>
         </div>
@@ -196,42 +204,38 @@
   </div>
 
 <script>
-  /* =====================
-     IMAGES (Zupimages) — iPhone X → 16 Pro Max
-     ===================== */
+  /* ========= Images Zupimages (iPhone X → 16 Pro Max) ========= */
   const IPHONE_IMG = {
-    "iPhone X": "https://zupimages.net/up/25/08/ri50.png",
-    "iPhone XR": "https://zupimages.net/up/25/08/oq34.png",
-    "iPhone XS": "https://zupimages.net/up/25/08/pvsh.png",
-    "iPhone XS Max": "https://zupimages.net/up/25/08/7kl2.png",
-    "iPhone 11": "https://zupimages.net/up/25/08/zr8y.png",
-    "iPhone 11 Pro": "https://zupimages.net/up/25/08/2t3j.png",
-    "iPhone 11 Pro Max": "https://zupimages.net/up/25/08/tv8e.png",
-    "iPhone 12": "https://zupimages.net/up/25/08/50vs.png",
-    "iPhone 12 mini": "https://zupimages.net/up/25/08/u629.png",
-    "iPhone 12 Pro": "https://zupimages.net/up/25/08/0uyh.png",
-    "iPhone 12 Pro Max": "https://zupimages.net/up/25/08/q4qa.png",
-    "iPhone 13": "https://zupimages.net/up/25/08/ihry.png",
-    "iPhone 13 mini": "https://zupimages.net/up/25/08/vux8.png",
-    "iPhone 13 Pro": "https://zupimages.net/up/25/08/30ul.png",
-    "iPhone 13 Pro Max": "https://zupimages.net/up/25/08/svvx.png",
-    "iPhone 14": "https://zupimages.net/up/25/08/7xs9.png",
-    "iPhone 14 Plus": "https://zupimages.net/up/25/08/lygc.png",
-    "iPhone 14 Pro": "https://zupimages.net/up/25/08/vhcz.png",
-    "iPhone 14 Pro Max": "https://zupimages.net/up/25/08/s45n.png",
-    "iPhone 15": "https://zupimages.net/up/25/08/oe0j.png",
-    "iPhone 15 Plus": "https://zupimages.net/up/25/08/z3n5.png",
-    "iPhone 15 Pro": "https://zupimages.net/up/25/08/hn7o.jpg",
-    "iPhone 15 Pro Max": "https://zupimages.net/up/25/08/5xvg.jpg",
-    "iPhone 16": "https://zupimages.net/up/25/08/tw3h.png",
-    "iPhone 16 Plus": "https://zupimages.net/up/25/08/gzkd.png",
-    "iPhone 16 Pro": "https://zupimages.net/up/25/08/srwe.png",
-    "iPhone 16 Pro Max": "https://zupimages.net/up/25/08/rc7q.png"
+    "iPhone X":"https://zupimages.net/up/25/08/ri50.png",
+    "iPhone XR":"https://zupimages.net/up/25/08/oq34.png",
+    "iPhone XS":"https://zupimages.net/up/25/08/pvsh.png",
+    "iPhone XS Max":"https://zupimages.net/up/25/08/7kl2.png",
+    "iPhone 11":"https://zupimages.net/up/25/08/zr8y.png",
+    "iPhone 11 Pro":"https://zupimages.net/up/25/08/2t3j.png",
+    "iPhone 11 Pro Max":"https://zupimages.net/up/25/08/tv8e.png",
+    "iPhone 12":"https://zupimages.net/up/25/08/50vs.png",
+    "iPhone 12 mini":"https://zupimages.net/up/25/08/u629.png",
+    "iPhone 12 Pro":"https://zupimages.net/up/25/08/0uyh.png",
+    "iPhone 12 Pro Max":"https://zupimages.net/up/25/08/q4qa.png",
+    "iPhone 13":"https://zupimages.net/up/25/08/ihry.png",
+    "iPhone 13 mini":"https://zupimages.net/up/25/08/vux8.png",
+    "iPhone 13 Pro":"https://zupimages.net/up/25/08/30ul.png",
+    "iPhone 13 Pro Max":"https://zupimages.net/up/25/08/svvx.png",
+    "iPhone 14":"https://zupimages.net/up/25/08/7xs9.png",
+    "iPhone 14 Plus":"https://zupimages.net/up/25/08/lygc.png",
+    "iPhone 14 Pro":"https://zupimages.net/up/25/08/vhcz.png",
+    "iPhone 14 Pro Max":"https://zupimages.net/up/25/08/s45n.png",
+    "iPhone 15":"https://zupimages.net/up/25/08/oe0j.png",
+    "iPhone 15 Plus":"https://zupimages.net/up/25/08/z3n5.png",
+    "iPhone 15 Pro":"https://zupimages.net/up/25/08/hn7o.jpg",
+    "iPhone 15 Pro Max":"https://zupimages.net/up/25/08/5xvg.jpg",
+    "iPhone 16":"https://zupimages.net/up/25/08/tw3h.png",
+    "iPhone 16 Plus":"https://zupimages.net/up/25/08/gzkd.png",
+    "iPhone 16 Pro":"https://zupimages.net/up/25/08/srwe.png",
+    "iPhone 16 Pro Max":"https://zupimages.net/up/25/08/rc7q.png"
   };
 
-  /* =====================
-     Catalogue (X → 16 Pro Max)
-     ===================== */
+  /* ========= Catalogue (X → 16 Pro Max) ========= */
   const MODELS = {
     Apple: {
       "iPhone 16 Pro Max":["128 Go","256 Go","512 Go","1 To"],
@@ -266,7 +270,7 @@
     Xiaomi:  {"Redmi Note 12":["64 Go","128 Go"], "Mi 11":["128 Go"]}
   };
 
-  // Barème base (exemple cohérent)
+  // ----- Barème base (exemple cohérent avant remise)
   const BASE = {
     "iPhone 16 Pro Max":{"128 Go":780,"256 Go":830,"512 Go":900,"1 To":980},
     "iPhone 16 Pro":{"128 Go":720,"256 Go":770,"512 Go":840,"1 To":920},
@@ -297,20 +301,20 @@
     "iPhone X":{"64 Go":160,"256 Go":190}
   };
 
-  /* =====================
-     État & helpers
-     ===================== */
+  // --- Remise globale reprise (-30%)
+  const TRADEIN_FACTOR = 0.70; // 70% du prix -> -30%
+
+  /* ========= État & helpers ========= */
   const el = s => document.querySelector(s);
   const panel = el('#panel');
   let stepIndex = 0;
   const state = {}; // brand, model, capacity, modelSearch, screen, body, battery, bio, icloud_ok...
 
-  function normalize(str){ return (str||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim(); }
-  function getModelsForBrand(brand){ return Object.keys(MODELS[brand]||{}); }
+  const normalize = str => (str||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+  const getModelsForBrand = brand => Object.keys(MODELS[brand]||{});
 
   function updatePhoneVisual(model){
-    const img = el('#heroImg');
-    const cap = el('#heroCaption');
+    const img = el('#heroImg'); const cap = el('#heroCaption');
     const url = IPHONE_IMG[model];
     img.classList.add('fade');
     setTimeout(()=>{
@@ -321,11 +325,13 @@
   }
 
   function updateRecycleFlag(s){
-    const recycle = s.brand && s.brand !== 'Apple';
+    const recycle = !!(s.brand && s.brand !== 'Apple' || (s.brand==='Apple' && s.bio!==true) || s.icloud_ok!==true || !s.model || !s.capacity);
     const note = el('#recycleNote');
+    const chip = el('#recycleChip');
     if(note) note.style.display = recycle ? 'block' : 'none';
+    if(chip) chip.style.display = recycle ? 'inline-flex' : 'none';
     s.recycle = recycle;
-    if (recycle) updatePhoneVisual(null);
+    if (s.brand && s.brand !== 'Apple') updatePhoneVisual(null);
   }
 
   function buildModelOptions(s){
@@ -375,17 +381,69 @@
       <button class="btn primary" id="next">Suivant</button>
     </div>`;
   }
-  function setTopBack(){
-    const topBack = el('#topBack');
-    if(topBack){
-      topBack.disabled = (stepIndex===0);
-      topBack.onclick = () => { if(stepIndex>0) prev(); };
+
+  /* ========= Modal générique ========= */
+  function iconSvg(name){
+    if(name==='check') return `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>`;
+    if(name==='info')  return `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8"/><line x1="12" y1="12" x2="12" y2="16"/></svg>`;
+    if(name==='x')     return `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+    return iconSvg('info');
+  }
+  function openModal({ variant='info', icon='info', title='', sub='', ctaText='', ctaHref='', autoRedirectMs=0 }){
+    const wrap = document.getElementById('uiModal');
+    const ico  = document.getElementById('uiModalIcon');
+    const h    = document.getElementById('uiModalTitle');
+    const p    = document.getElementById('uiModalSub');
+    const cta  = document.getElementById('uiModalCta');
+    const close= document.getElementById('uiModalClose');
+
+    ico.className = 'modal-icon ' + variant;
+    ico.innerHTML = iconSvg(icon);
+    h.innerHTML = title || '';
+    p.textContent = sub || '';
+
+    if (ctaHref){
+      cta.href = ctaHref; cta.textContent = ctaText || 'Continuer'; cta.style.display = 'inline-flex';
+    } else { cta.style.display = 'none'; }
+
+    wrap.hidden = false;
+    requestAnimationFrame(()=> wrap.classList.add('show'));
+
+    const hide = () => { wrap.classList.remove('show'); setTimeout(()=>{ wrap.hidden = true; }, 220); };
+    close.onclick = hide;
+    wrap.addEventListener('click', (e)=>{ if(e.target === wrap) hide(); });
+
+    if (ctaHref && autoRedirectMs>0){
+      clearTimeout(openModal._to);
+      openModal._to = setTimeout(()=>{ window.location.href = ctaHref; }, autoRedirectMs);
     }
   }
+  function notifySuccess({price, model, redirectUrl=''}) {
+    openModal({
+      variant:'success', icon:'check',
+      title:`Votre estimation <span style="white-space:nowrap">${price}€</span> pour <span style="white-space:nowrap">${model}</span> a bien été ajoutée à votre devis !`,
+      sub:'Redirection en cours pour choisir votre boutique…',
+      ctaText:'Choisir ma boutique',
+      ctaHref: redirectUrl || '',
+      autoRedirectMs: redirectUrl ? 2200 : 0
+    });
+  }
+  function notifyRecycle(msg) {
+    openModal({
+      variant:'info', icon:'info',
+      title:'Appareil dirigé vers le recyclage ♻️',
+      sub: msg || "Ce modèle n'est pas éligible au rachat (ou conditions non remplies)."
+    });
+  }
+  function notifyError(msg){
+    openModal({
+      variant:'error', icon:'x',
+      title:'Action impossible',
+      sub: msg || 'Veuillez vérifier les informations saisies.'
+    });
+  }
 
-  /* =====================
-     Règles & Pricing
-     ===================== */
+  /* ========= Règles & Pricing ========= */
   function mustRecycle(s){
     if (s.brand && s.brand !== 'Apple') return true;     // iPhone only
     if (s.brand === 'Apple' && s.bio !== true) return true; // Face ID / Touch ID obligatoire
@@ -416,17 +474,23 @@
     if (s.cams===false)  p -= 80;
     if (s.audio===false) p -= 80;
     if (s.radio===false) p -= 80;
-    return Math.max(15, Math.min(2000, Math.round(p)));
+    p = Math.round(p * TRADEIN_FACTOR); // –30% reprise
+    return Math.max(15, Math.min(2000, p));
   }
+
+  /* ========= Quick offer & affichages ========= */
   function updateQuickOffer(s){
     const box = el('#quickOffer');
     const body = el('#quickOfferBody');
-    const have = s.brand && s.model && s.capacity && s.screen && s.body && typeof s.battery==='number';
+    const have = s.brand && s.model && s.capacity && s.screen && s.body && typeof s.battery==='number' && s.battery>=50 && s.battery<=100;
     if(have){
       box.hidden = false;
       const p = priceEngine(s);
-      body.innerHTML = p>0 ? `Estimation provisoire : <strong>${p}€</strong> (à affiner)` : `Aucune reprise — <strong>recyclage</strong>.`;
+      body.innerHTML = p>0
+        ? `Estimation provisoire : <strong>${p}€</strong> <span class="chip">–30% reprise</span><br><span class="muted">(après remise)</span>`
+        : `Aucune reprise — <strong>recyclage</strong>.`;
     } else {
+      box.hidden = false;
       body.textContent = 'Complétez les étapes pour voir l\'offre.';
     }
   }
@@ -435,78 +499,13 @@
     if(!text) return;
     const p = priceEngine(s);
     if(p>0){
-      text.innerHTML = `<strong>${p}€</strong> pour ${s.brand||''} ${s.model||''} ${s.capacity||''}.`;
+      text.innerHTML = `<strong>${p}€</strong> pour ${s.brand||''} ${s.model||''} ${s.capacity||''} <span class="chip">–30% reprise</span>.`;
     } else {
       text.textContent = 'Aucune reprise — recyclage uniquement.';
     }
   }
 
-  /* ===== MODAL GÉNÉRIQUE ===== */
-  function iconSvg(name){
-    if(name==='check') return `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>`;
-    if(name==='info')  return `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8"/><line x1="12" y1="12" x2="12" y2="16"/></svg>`;
-    if(name==='x')     return `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
-    return iconSvg('info');
-  }
-  function openModal({ variant='info', icon='info', title='', sub='', ctaText='', ctaHref='', autoRedirectMs=0 }){
-    const wrap = document.getElementById('uiModal');
-    const ico  = document.getElementById('uiModalIcon');
-    const h    = document.getElementById('uiModalTitle');
-    const p    = document.getElementById('uiModalSub');
-    const cta  = document.getElementById('uiModalCta');
-    const close= document.getElementById('uiModalClose');
-
-    ico.className = 'modal-icon ' + variant;
-    ico.innerHTML = iconSvg(icon);
-    h.innerHTML = title || '';
-    p.textContent = sub || '';
-
-    if (ctaHref){
-      cta.href = ctaHref; cta.textContent = ctaText || 'Continuer'; cta.style.display = 'inline-flex';
-    } else { cta.style.display = 'none'; }
-
-    wrap.hidden = false;
-    requestAnimationFrame(()=> wrap.classList.add('show'));
-
-    const hide = () => { wrap.classList.remove('show'); setTimeout(()=>{ wrap.hidden = true; }, 220); };
-    document.getElementById('uiModalClose').onclick = hide;
-    wrap.onclick = (e)=>{ if(e.target === wrap) hide(); };
-
-    if (ctaHref && autoRedirectMs>0){
-      clearTimeout(openModal._to);
-      openModal._to = setTimeout(()=>{ window.location.href = ctaHref; }, autoRedirectMs);
-    }
-  }
-  function notifySuccess({price, model, redirectUrl=''}) {
-    openModal({
-      variant:'success', icon:'check',
-      title:`Votre estimation <span style="white-space:nowrap">${price}€</span> pour <span style="white-space:nowrap">${model}</span> a bien été ajoutée à votre devis !`,
-      sub:'Redirection en cours pour choisir votre boutique…',
-      ctaText:'Choisir ma boutique',
-      ctaHref: redirectUrl || '',
-      autoRedirectMs: redirectUrl ? 2200 : 0
-    });
-  }
-  function notifyRecycle(msg) {
-    openModal({
-      variant:'info', icon:'info',
-      title:'Appareil dirigé vers le recyclage ♻️',
-      sub: msg || "Ce modèle n'est pas éligible au rachat (ou conditions non remplies).",
-      ctaText:'En savoir plus',
-      ctaHref:''
-    });
-  }
-  function notifyError(msg){
-    openModal({
-      variant:'error', icon:'x',
-      title:'Action impossible',
-      sub: msg || 'Veuillez vérifier les informations saisies.'
-    });
-  }
-
-  /* =====================
-     Étapes
-     ===================== */
+  /* ========= Étapes ========= */
   const STEPS = [
     // 1) Appareil (+ recherche + image auto)
     {
@@ -574,14 +573,16 @@
         const modelSel = target.querySelector('#model');
         if(modelSel) modelSel.addEventListener('change', e=>{
           s.model = e.target.value || undefined; s.capacity = undefined;
-          updateRecycleFlag(s);
           updatePhoneVisual(s.model || null);
           const capSel = target.querySelector('#capacity'); capSel.innerHTML = buildCapacityOptions(s); capSel.disabled = !(s.model);
+          updateRecycleFlag(s);
+          updateQuickOffer(s);
         });
 
         const capSel = target.querySelector('#capacity');
         if(capSel) capSel.addEventListener('change', e=>{
           s.capacity = e.target.value || undefined;
+          updateRecycleFlag(s);
           updateQuickOffer(s);
         });
       },
@@ -653,7 +654,12 @@
           </div>
           ${nav()}
         `;
-        target.querySelector('#battery').addEventListener('input', e=>{ s.battery = +e.target.value || undefined; updateQuickOffer(s); });
+        const bat = target.querySelector('#battery');
+        bat.addEventListener('input', e=>{
+          const v = +e.target.value;
+          s.battery = Number.isFinite(v) ? v : undefined;
+          updateQuickOffer(s);
+        });
         target.querySelector('#cycles').addEventListener('input', e=>{ s.cycles = +e.target.value || undefined; });
       },
       valid: s => typeof s.battery === 'number' && s.battery >= 50 && s.battery <= 100
@@ -698,6 +704,7 @@
             b.setAttribute('aria-pressed', on);
             b.querySelector('.txt').textContent = on ? 'ON' : 'OFF';
             s[key] = on;
+            updateRecycleFlag(s);
             updateOffer(s);
           });
         };
@@ -710,20 +717,33 @@
 
         document.getElementById('back').onclick = prev;
         document.getElementById('see').onclick = () => { if(mustRecycle(s)) notifyRecycle(); else showOffer(); };
+        updateRecycleFlag(s);
         updateOffer(s);
       },
       valid: _s => true
     }
   ];
 
-  /* =====================
-     Navigation & rendu
-     ===================== */
+  /* ========= Navigation & validations ========= */
   function next(){
     const step = STEPS[stepIndex];
-    if(step.valid(state)){
-      stepIndex = Math.max(0, Math.min(stepIndex+1, STEPS.length-1));
+    const ok = step.valid(state);
+    if(ok){
+      stepIndex = Math.min(stepIndex+1, STEPS.length-1);
       render();
+      return;
+    }
+    // messages contextualisés
+    if(step.key==='device'){
+      notifyError("Choisis d’abord la marque, le modèle et la capacité.");
+    } else if(step.key==='screen'){
+      notifyError("Sélectionne l’état de l’écran pour continuer.");
+    } else if(step.key==='body'){
+      notifyError("Sélectionne l’état de la coque / contour.");
+    } else if(step.key==='battery'){
+      if(typeof state.battery!=='number') notifyError("Entre une capacité de batterie (50–100%).");
+      else if(state.battery<50 || state.battery>100) notifyError("La capacité doit être comprise entre 50% et 100%.");
+      else notifyError("Complète les champs requis.");
     } else {
       notifyError("Complète les champs requis avant de continuer.");
     }
@@ -753,6 +773,10 @@
 
     const nextBtn = panel.querySelector('#next'); if(nextBtn) nextBtn.addEventListener('click', next);
     const backBtn = panel.querySelector('#back'); if(backBtn) backBtn.addEventListener('click', prev);
+
+    // mettre à jour l’offre & les badges à chaque rendu
+    updateRecycleFlag(state);
+    updateQuickOffer(state);
   }
 
   document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && stepIndex>0) prev(); });
